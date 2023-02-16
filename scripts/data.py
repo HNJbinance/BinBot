@@ -1,8 +1,6 @@
 from binance.client import Client, AsyncClient
 import pandas as pd
-
-from Credentials import api_key, api_secret
-
+from Crendentials import api_key, api_secret
 client = Client(api_key, api_secret)
 
 def getData(coin : str , bar :int , nu_unit_lookback : int, unit_lookback: str ):
@@ -11,8 +9,8 @@ def getData(coin : str , bar :int , nu_unit_lookback : int, unit_lookback: str )
 
         Args:
             coin (str): La paire de trading à récupérer (par exemple, 'BTC').
-            bar (int): L'intervalle de temps entre chaque bougie en minutes.
-            nu_unit_lookback (int): Le nombre d'unités de lookback à récupérer.
+            bar (int): L'intervalle de temps entre chaque bougie en minutes. C'est le timeframe (3, 15, 30)
+            nu_unit_lookback (int): Le nombre d'unités de lookback à récupérer. (combien de bougie on veut récuperer)
             unit_lookback (str): L'unité de temps pour le lookback (par exemple, 'day' pour jour, 'hour' pour heure, 'minute' pour minute).
 
         Returns:
@@ -57,4 +55,12 @@ def getData(coin : str , bar :int , nu_unit_lookback : int, unit_lookback: str )
     ]
     df.CloseTime = pd.to_datetime(df.CloseTime.values, unit="ms")
     df = df.astype({"Close": "float"})
+    df = df.astype({"Open": "float"})
+    df = df.astype({"High": "float"})
+    df = df.astype({"Low": "float"})
+    df = df.astype({"Volume": "float"})
+    df = df.astype({"QuoteAssetVolume": "float"})
     return df
+##FOR TEST
+print(getData('BTC',15, 1, 'h'))
+print(client.KLINE_INTERVAL_1DAY)
