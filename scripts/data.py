@@ -1,4 +1,6 @@
-from binance.client import Client, AsyncClient
+import csv
+from binance import Client, ThreadedWebsocketManager
+
 import pandas as pd
 from Crendentials import api_key, api_secret
 client = Client(api_key, api_secret)
@@ -62,5 +64,41 @@ def getData(coin : str , bar :int , nu_unit_lookback : int, unit_lookback: str )
     df = df.astype({"QuoteAssetVolume": "float"})
     return df
 ##FOR TEST
-print(getData('BTC',15, 1, 'h'))
+print(getData('BTC',15, 24, 'h'))
 print(client.KLINE_INTERVAL_1DAY)
+
+# Initialisez le gestionnaire de websocket de Binance
+twm = ThreadedWebsocketManager(api_key=api_key, api_secret=api_secret)
+
+# Ouvrez un fichier CSV pour écrire les données de streaming
+with open('streaming_data.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+
+    # Écrivez l'en-tête du fichier CSV
+    writer.writerow(["Time", "Open", "High", "Low", "Close", "Volume", "CloseTime", "QuoteAssetVolume", "NumberOfTrades"])
+
+    # Définir la fonction de rappel pour recevoir les données de streaming
+    def callback(data):
+        candle = data['k']
+        writer.writerow([
+            candle['t'],
+            candle['o'],
+            candle['h'],
+            candle['l'],
+            candle['c'],
+            candle['v'],
+            candle['T'],
+            candle['q'],
+            candle['n'],
+        ])
+
+    # Connectez-vous au flux de données de streaming en utilisant le gestionnaire de websocket de Binance
+    twm.start_kline_socket(callback, 'BTCUSDT')
+
+    # Commencer la diffusion des données de streaming
+    twm.start()
+
+
+
+
+
