@@ -1,5 +1,6 @@
 import websocket
 import json
+import datetime
 
 def on_message(ws, message):
    data = json.loads(message)
@@ -7,9 +8,10 @@ def on_message(ws, message):
      print(f"Error: {data['m']}")
    else:
         btc_real_price = float(data['c'])
-        print(f"BTC/USDT price: {btc_real_price}")
-        with open('btc_real_price.json', 'w') as f:
-            json.dump({'BTC/USDT': btc_real_price}, f)
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        with open('btc_real_price.json', 'a') as f:
+            json.dump({'timestamp': timestamp, 'BTC/USDT': btc_real_price}, f)
+            f.write('\n')
 
 def on_error(ws, error):
     print(f"WebSocket error: {error}")
