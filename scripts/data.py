@@ -1,6 +1,13 @@
 import csv
-from binance import Client, ThreadedWebsocketManager
 
+from binance.client import Client
+from binance import ThreadedWebsocketManager
+from binance.enums import *
+
+
+import json
+from datetime import datetime
+import time
 import pandas as pd
 from Crendentials import api_key, api_secret
 client = Client(api_key, api_secret)
@@ -64,41 +71,52 @@ def getData(coin : str , bar :int , nu_unit_lookback : int, unit_lookback: str )
     df = df.astype({"QuoteAssetVolume": "float"})
     return df
 ##FOR TEST
-print(getData('BTC',15, 24, 'h'))
-print(client.KLINE_INTERVAL_1DAY)
+#print(getData('BTC',15, 24, 'h'))
+#print(client.KLINE_INTERVAL_1DAY)
 
-# Initialisez le gestionnaire de websocket de Binance
-twm = ThreadedWebsocketManager(api_key=api_key, api_secret=api_secret)
 
-# Ouvrez un fichier CSV pour écrire les données de streaming
-with open('streaming_data.csv', mode='w', newline='') as file:
-    writer = csv.writer(file)
 
-    # Écrivez l'en-tête du fichier CSV
-    writer.writerow(["Time", "Open", "High", "Low", "Close", "Volume", "CloseTime", "QuoteAssetVolume", "NumberOfTrades"])
+def start_streaming_data(symbol: str, interval: str, output_type: str) -> None:
+    num_msgs = 0
+    start_time = time.time()
+    print("11111111111111111111111")
 
-    # Définir la fonction de rappel pour recevoir les données de streaming
-    def callback(data):
-        candle = data['k']
-        writer.writerow([
-            candle['t'],
-            candle['o'],
-            candle['h'],
-            candle['l'],
-            candle['c'],
-            candle['v'],
-            candle['T'],
-            candle['q'],
-            candle['n'],
-        ])
+    def callback_fct(data):
+        print("Received new klines:")
+        print(data)
+        json_data = json.loads(data)
+        kline = json_data['k']
+        candle_data = [
+            datetime.fromtimestamp(kline['t'] / 1000),
+            float(kline['o']),
+            float(kline['h']),
+            float(kline['l']),
+            float(kline['c']),
+            float(kline['v']),
+            datetime.fromtimestamp(kline['T'] / 1000),
+            float(kline['q']),
+            int(kline['n'])
+        ]
+        if output_type == 'json':
+            with open(f'{symbol}_{interval}.json', 'w', newline='') as jsonfile:
+                writer = json.writer(jsonfile)
+                writer.writerow(candle_data)
+        elif output_type == 'csv':
+            with open(f'{symbol}_{interval}.csv', 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(candle_data)
 
-    # Connectez-vous au flux de données de streaming en utilisant le gestionnaire de websocket de Binance
-    twm.start_kline_socket(callback, 'BTCUSDT')
-
-    # Commencer la diffusion des données de streaming
+    twm = ThreadedWebsocketManager(api_key=api_key, api_secret=api_secret)
     twm.start()
+    print("222222222222222222")
+
+    twm.start_kline_socket(callback=callback_fct, symbol=symbol, interval=KLINE_INTERVAL_1MINUTE)
+    print("333333333333333333333333")
 
 
+    print("44444444444444444444444444")
+
+start_streaming_data('BTCUSDT', '1m','csv')
 
 
 
