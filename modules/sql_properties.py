@@ -34,7 +34,15 @@ class SqlAction:
         except :
             print(colored("get_symbol_interval : unable to do action","red"))
 
-    def update_symbol_interval(self, id_symint, endtime) :        
+    def update_symbol_interval_starttime(self, id_symint, starttime) :        
+        try : 
+            query = "update opa.symbol_interval set  starttime = {0}, date_update = now() where id_symint = {1}".format(starttime,id_symint)
+            self.curr.execute(query)
+            self.conn.commit()  
+        except :
+            print(colored("update_symbol_interval : unable to do action","red"))
+
+    def update_symbol_interval_endtime(self, id_symint, endtime) :        
         try : 
             query = "update opa.symbol_interval set  endtime = {0}, date_update = now() where id_symint = {1}".format(endtime,id_symint)
             self.curr.execute(query)
