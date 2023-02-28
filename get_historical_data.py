@@ -9,7 +9,7 @@ from time import sleep
 
 client = Spot()
 sql = sql.SqlAction()
-
+max_speed = 60/300
 # print(client.time())
 
 # get symbol interval data to retrieve historical data from database
@@ -18,7 +18,7 @@ symint = sql.get_symbol_interval()
 for val in symint :    
     # variables   
     api_starttime = 0
-    api_endtime = 1
+    api_endtime =1
     i = 0
     max_loop = 1000 
     # db variables   
@@ -33,7 +33,7 @@ for val in symint :
 
     while ( api_starttime < api_endtime and i < max_loop ) : 
         # get historical data of symbol/interval requested from binance REST API
-        klines_data =  client.klines(symbol=db_symbol, interval=db_interval,startTime=db_endtime+1)
+        klines_data =  client.klines(symbol=db_symbol, interval=db_interval,startTime=db_endtime+1,limit=1000)
         # Remove last index of each list (// Unused field. Ignore.)
         klines_data = [klines_data[:-1] for klines_data in klines_data]
 
@@ -58,7 +58,7 @@ for val in symint :
                 db_starttime = api_starttime
 
             # Waiting for API limitation
-            sleep(1)
+            sleep(max_speed)
             i += 1
     else :
         if db_endtime > api_starttime : 
