@@ -7,7 +7,7 @@ from time import sleep
 # info maximum limit request API : 1,200 request weight per minute
 # if rule break : http 403 with ban period of 5 min
 
-client = Spot()
+client = Spot(timeout=2)
 sql = sql.SqlAction()
 max_speed = 60/300
 # print(client.time())
