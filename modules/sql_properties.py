@@ -70,9 +70,8 @@ class SqlAction:
 # OPA STREAM KLINES FUNCTIONS
 #############################################################################################################
     def store_stream_klines(self, id_origin) :
-        try :                     
-            
-            query = "insert into opa.historical_klines  (id_symint, event_type, event_time, symbol, kline_start_time,\
+        try :           
+            query = "insert into opa.stream_klines (id_symint, event_type, event_time, symbol, kline_start_time,\
                  kline_close_time, interval_symbol, first_trade_id, last_trade_id, open_price, close_price, high_price,\
                      low_price, base_asset_volume, number_of_trades, is_this_kline_closed, quote_asset_volume, taker_buy_base_asset_volume, taker_buy_quote_asset_volume )\
             values ({}, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(id_symint)
