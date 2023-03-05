@@ -69,15 +69,46 @@ class SqlAction:
 #############################################################################################################
 # OPA STREAM KLINES FUNCTIONS
 #############################################################################################################
-    def store_stream_klines(self, id_origin) :
-        try :           
-            query = "insert into opa.stream_klines (id_symint, event_type, event_time, symbol, kline_start_time,\
-                 kline_close_time, interval_symbol, first_trade_id, last_trade_id, open_price, close_price, high_price,\
-                     low_price, base_asset_volume, number_of_trades, is_this_kline_closed, quote_asset_volume, taker_buy_base_asset_volume, taker_buy_quote_asset_volume )\
-            values ({}, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(id_symint)
-            self.curr.executemany(query,val)
+    def store_stream_klines(self, id_symint,val) :
+        try :  
+            columns_def = {
+                            "t":"kline_start_time",
+                            "T":"kline_close_time",
+                            "i":"interval_symbol",
+                            "s":"symbol",
+                            "f":"first_trade_id",
+                            "L":"last_trade_id",
+                            "o":"open_price",
+                            "c":"close_price",
+                            "h":"high_price",
+                            "l":"low_price",
+                            "v":"base_asset_volume",
+                            "n":"number_of_trades",
+                            "x":"is_this_kline_closed",
+                            "q":"quote_asset_volume",
+                            "V":"taker_buy_base_asset_volume",
+                            "Q":"taker_buy_quote_asset_volume",
+                            "B":"ignore"
+			                }
+
+            for k, v in columns_def.items() :
+                val[v]=val.pop(k)
+            id_symint = 1
+
+            varlist = list(val.values())
+            varlist = varlist[:-1]
+            
+            keylist = list(val.keys())
+            keylist = keylist[:-1]
+            columns_string = ", ".join(keylist)
+
+            query = "replace into opa.stream_klines (  {} )\
+            values ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(columns_string)
+
+            self.curr.execute(query,varlist)
             self.conn.commit()
-            print(self.curr.rowcount, "was inserted.")
+            print("1 row was inserted.")
+
             return 
         except :
             print(colored("store_historical_klines : unable to do action","red"))
