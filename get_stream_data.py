@@ -12,23 +12,25 @@ config_logging(logging, logging.DEBUG)
 sql = sql.SqlAction()
 
 def message_handler(_, message ):
-    # logging.info(message)
-    print(colored(type(message),"green"))
+    
+    # convert string to dict
     message_dict = json.loads(message)
 
+    # storing usefull data into new dict
+    new_message = message_dict["data"]["k"]
 
-    print(colored(type(message_dict),"green"))    
-    print(colored((message_dict),"green"))
- 
+    # adding event_time to new_dict
+    new_message["event_time"] = message_dict["data"]["E"]
 
-    print(colored((message_dict["data"]["s"]),"yellow"))  
+    #storting data into database
+    sql.store_stream_klines(1,new_message)
 
 
 
 
 my_client = SpotWebsocketStreamClient(on_message=message_handler, is_combined=True)
 columns_def = {
-			"stream":"event_type",
+			"stream":"OOOOOOO",
 			"data" : {  
                         "e":"event_type",
                         "E":"event_time",
@@ -37,6 +39,7 @@ columns_def = {
                             "t":"kline_start_time",
                             "T":"kline_close_time",
                             "i":"interval",
+                            "s":"symbol",
                             "f":"first_trade_id",
                             "L":"last_trade_id",
                             "o":"open_price",
@@ -55,10 +58,8 @@ columns_def = {
 symint = sql.get_symbol_interval()
 # loop on every symbol/interval requested
 for val in symint :        
-    db_id_symint = val['id_symint']
     db_interval=val['interval_symbol']
     db_symbol = val['symbol'].lower()
-    # subscribe each stream kline
     my_client.kline(symbol=db_symbol, interval=db_interval)
 
 
