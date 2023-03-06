@@ -32,6 +32,6 @@ df.drop(columns=['High', 'Low', 'Quote asset volume', 'Number of trades',
 df.set_index('Open time', inplace=True)
 
 # Sauvegarder les données nettoyées dans un nouveau fichier CSV
-df.to_json('binance_data.json', orient='records')
+#df.to_json('binance_data.json', orient='records')
 
-#df.to_csv('binance_data.csv', index=True)
+df.to_csv('binance_data.csv', index=True)
