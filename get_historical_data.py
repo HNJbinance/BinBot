@@ -20,7 +20,7 @@ for val in symint :
     api_starttime = 0
     api_endtime =1
     i = 0
-    max_loop = 1000 
+    max_loop =10000 
     # db variables   
     db_id_symint = val['id_symint']
     db_starttime = val['starttime']
