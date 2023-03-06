@@ -58,8 +58,8 @@ into symbol_interval values
     ) ;
 
 -- ------------------------------------------------------------------- 
-drop table if exists historical_klines_v2 ;
-create table if not exists historical_klines_v2
+drop table if exists historical_klines ;
+create table if not exists historical_klines
     (
         id_symint int not null
       , open_time bigint not null
@@ -76,10 +76,7 @@ create table if not exists historical_klines_v2
       , primary key(id_symint, open_time)
     )
   PARTITION BY RANGE  (id_symint) (
-  PARTITION P_0 values less than (1),insert into opa.stream_klines (id_symint, event_time, kline_start_time,\
-                 kline_close_time, interval_symbol, symbol, first_trade_id, last_trade_id, open_price, close_price, high_price,\
-                     low_price, base_asset_volume, number_of_trades, is_this_kline_closed, quote_asset_volume, taker_buy_base_asset_volume, taker_buy_quote_asset_volume )\
-            values 
+  PARTITION P_0 values less than (1),
   PARTITION P_1 values less than (2),
   PARTITION P_2 VALUES less than (3),
   PARTITION P_3 VALUES less than (4),
