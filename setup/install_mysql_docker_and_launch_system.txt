@@ -3,12 +3,19 @@
 ########################################
 docker pull mysql
 docker run --name mysql -h 127.0.0.1 -p 3306:3306 -v mysql_volume:/var/lib/mysql/ -d -e MYSQL_ROOT_PASSWORD=temp123 mysql
-#docker restart mysql
-#docker stop mysql
+
 ########################################
 # CREATING DATABASE & PERMISSIONS
 ########################################
 docker exec -it mysql bash
 mysql -u root -p 
-# Then execute the init_opa_database.sql
+# Then execute the init_opa_database_v3.sql
+
+
+########################################
+# Launch stream and historical script 
+########################################
+
+# modify database adress into modules/sql_properties.sh
+# execute ./launch_all.sh
 
