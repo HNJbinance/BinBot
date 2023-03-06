@@ -23,6 +23,6 @@ pip install -r requirements.txt
 ########################################
 # Launch stream and historical script 
 ########################################
-./launch_all.sh
+Come back to BinBot/ then launch start.sh
 
 
