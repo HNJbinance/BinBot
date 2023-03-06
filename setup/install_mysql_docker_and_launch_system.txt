@@ -11,9 +11,13 @@ docker exec -it mysql bash
 mysql -u root -p 
 # Then execute the init_opa_database.sql
 
+########################################
+# install python requirements
+########################################
+pip install -r requirements.txt 
 
 ########################################
 # Launch stream and historical script 
 ########################################
-# execute ./launch_all.sh
+./launch_all.sh
 
