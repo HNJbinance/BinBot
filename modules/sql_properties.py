@@ -6,7 +6,7 @@ class SqlAction:
     conn = mysql.connector.connect(
                 user ='datascientest',
                 passwd ='temp123',
-                host ='52.51.116.43',
+                host ='127.0.0.1',
                 port ="3306",
                 database ="opa"
             )  
@@ -55,7 +55,7 @@ class SqlAction:
     def store_historical_klines(self, id_symint, val) :
         try :                     
             
-            query = "insert into opa.historical_klines  (id_symint, open_time, open_price, high_price, low_price, close_price, \
+            query = "replace into opa.historical_klines  (id_symint, open_time, open_price, high_price, low_price, close_price, \
             volume, close_time, quote_asset_volume, number_of_trades, taker_buy_base_asset_volume, taker_buy_quote_asset_volume )\
             values ({}, %s , %s , %s , %s , %s , %s , %s , %s , %s , %s, %s)".format(id_symint)
             self.curr.executemany(query,val)
