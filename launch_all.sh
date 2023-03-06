@@ -1,5 +1,5 @@
 echo "starting mysql container..."
-docker start mysql
+docker start mysql_container
 sleep 2
 
 echo "starting get_stream_data.py in background..."

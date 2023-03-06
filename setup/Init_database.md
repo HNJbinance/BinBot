@@ -1,23 +1,28 @@
 ########################################
 # INSTALL AND RUN MYSQL DOCKER
 ########################################
-docker pull mysql
-docker run --name mysql -h 127.0.0.1 -p 3306:3306 -v mysql_volume:/var/lib/mysql/ -d -e MYSQL_ROOT_PASSWORD=temp123 mysql
+docker pull mysql:latest
+docker run --name mysql_container -h 127.0.0.1 -p 3306:3306 -v mysql_volume:/var/lib/mysql/ -d -e MYSQL_ROOT_PASSWORD=temp123 mysql
+
 
 ########################################
 # CREATING DATABASE & PERMISSIONS
 ########################################
-docker exec -it mysql bash
-mysql -u root -p 
-# Then execute the init_opa_database.sql
+docker exec -it mysql_container bash 
+mysql -u root -ptemp123 
+
+# Then copy paste the init_opa_database.sql
+
 
 ########################################
 # install python requirements
 ########################################
 pip install -r requirements.txt 
 
+
 ########################################
 # Launch stream and historical script 
 ########################################
 ./launch_all.sh
+
 
