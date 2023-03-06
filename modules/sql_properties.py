@@ -69,7 +69,7 @@ class SqlAction:
 #############################################################################################################
 # OPA STREAM KLINES FUNCTIONS
 #############################################################################################################
-    def store_stream_klines(self, id_symint,val) :
+    def store_stream_klines(self, val) :
         try :  
             columns_def = {
                             "t":"kline_start_time",
@@ -93,7 +93,6 @@ class SqlAction:
 
             for k, v in columns_def.items() :
                 val[v]=val.pop(k)
-            id_symint = 1
 
             varlist = list(val.values())
             varlist = varlist[:-1]
@@ -101,10 +100,12 @@ class SqlAction:
             keylist = list(val.keys())
             keylist = keylist[:-1]
             columns_string = ", ".join(keylist)
+            print(colored(varlist,"red"))
+            print(colored(keylist,"yellow"))
 
             query = "replace into opa.stream_klines (  {} )\
             values ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(columns_string)
-
+            print(colored(query,"green"))
             self.curr.execute(query,varlist)
             self.conn.commit()
             print("1 row was inserted.")
