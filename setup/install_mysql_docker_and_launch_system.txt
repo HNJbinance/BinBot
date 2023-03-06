@@ -15,13 +15,6 @@ mysql -u root -ptemp123
 
 
 ########################################
-# reinstall OpenSSl
-########################################
-sudo rm -rf /usr/lib/python3/dist-packages/OpenSSL
-sudo pip3 install pyopenssl
-sudo pip3 install pyopenssl --upgrade
-
-########################################
 # install python requirements
 ########################################
 pip install -r requirements.txt 
@@ -30,6 +23,9 @@ pip install -r requirements.txt
 ########################################
 # Launch stream and historical script 
 ########################################
-Come back to BinBot/ then launch start.sh
+./launch_all.sh
 
 
+sudo rm -rf /usr/lib/python3/dist-packages/OpenSSL
+sudo pip3 install pyopenssl
+sudo pip3 install pyopenssl --upgrade
