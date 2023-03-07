@@ -66,6 +66,17 @@ class SqlAction:
             print(colored("store_historical_klines : unable to do action","red"))
             raise
 
+        
+    def retrieve_historical_klines(self, id_symint) :
+        try : 
+            query = "select *  from opa.historical_klines where id_symint={0}".format(id_symint)
+            self.curr.execute(query)
+            data = self.curr.fetchall()
+            # print(colored(data,"red"))
+            return data
+        except :
+            print(colored("get_symbol_interval : unable to do action","red"))
+
 #############################################################################################################
 # OPA STREAM KLINES FUNCTIONS
 #############################################################################################################
