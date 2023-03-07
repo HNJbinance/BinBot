@@ -1,7 +1,7 @@
 import logging
 from termcolor import colored
 import modules.sql_properties as sql 
-from binance.lib.utils import config_logging
+# from binance.lib.utils import config_logging
 from binance import ThreadedWebsocketManager
 import json
 
@@ -10,7 +10,6 @@ sql = sql.SqlAction()
 
 def main():
 
-    symbol = 'BNBBTC'
 
     twm = ThreadedWebsocketManager()
     # start is required to initialise its internal loop
