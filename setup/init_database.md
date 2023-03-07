@@ -1,4 +1,10 @@
 ########################################
+# ON NEW MACHINE ONYL
+########################################
+https://cloudcone.com/docs/article/how-to-install-docker-on-ubuntu-22-04-20-04/
+
+
+########################################
 # INSTALL AND RUN MYSQL DOCKER
 ########################################
 docker pull mysql
@@ -30,6 +36,8 @@ pip install -r requirements.txt
 ########################################
 # Launch stream and historical script 
 ########################################
-Come back to BinBot/ then launch start.sh
-
+# Come back to BinBot/ then launch start.sh
+cd ..
+chmod 755 *.sh
+./start.sh
 
