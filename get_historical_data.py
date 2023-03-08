@@ -1,5 +1,3 @@
-
-#!/usr/bin/python
 from binance.spot import Spot
 import modules.sql_properties as sql 
 import pprint as pprint
