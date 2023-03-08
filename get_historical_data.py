@@ -1,8 +1,25 @@
+
+#!/usr/bin/python
 from binance.spot import Spot
 import modules.sql_properties as sql 
 import pprint as pprint
 from termcolor import colored
 from time import sleep
+
+from os import getpid
+from sys import argv, exit
+import psutil  ## pip install psutil
+
+myname = argv[0]
+mypid = getpid()
+print(myname)
+for process in psutil.process_iter():
+    if process.pid != mypid:
+        for path in process.cmdline():
+            if myname in path:
+                print("process found")
+                process.terminate()
+                sleep(0.5)
 
 # info maximum limit request API : 1,200 request weight per minute
 # if rule break : http 403 with ban period of 5 min
