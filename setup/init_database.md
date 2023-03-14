@@ -3,7 +3,6 @@
 ########################################
 https://cloudcone.com/docs/article/how-to-install-docker-on-ubuntu-22-04-20-04/
 
-
 ########################################
 # INSTALL AND RUN MYSQL DOCKER
 ########################################
