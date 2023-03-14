@@ -33,9 +33,9 @@ symint = sql.get_symbol_interval()
 for val in symint :    
     # variables   
     api_starttime = 0
-    api_endtime =1
+    api_endtime = 1
     i = 0
-    max_loop =10000 
+    max_loop = 10000 
     # db variables   
     db_id_symint = val['id_symint']
     db_starttime = val['starttime']

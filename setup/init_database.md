@@ -32,6 +32,10 @@ sudo pip3 install pyopenssl --upgrade
 ########################################
 pip install -r requirements.txt 
 
+########################################
+# init crontab
+########################################
+./init_crontab.sh
 
 ########################################
 # Launch stream and historical script 
