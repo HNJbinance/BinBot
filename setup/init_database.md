@@ -16,7 +16,6 @@ docker run --name mysql_container -h 127.0.0.1 -p 3306:3306 -d -e MYSQL_ROOT_PAS
 ########################################
 docker exec -it mysql_container bash 
 mysql -u root -ptemp123 
-
 # Then copy paste the init_opa_database.sql
 
 

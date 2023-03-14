@@ -126,3 +126,32 @@ class SqlAction:
             print(colored("store_historical_klines : unable to do action","red"))
             raise
 
+
+    def purge_stream_klines(self) :
+        try : 
+            query = "delete \
+                    from opa.stream_klines a \
+                    where exists \
+                        (select 1  \
+                            from(select symbol \
+                                    , interval_symbol \
+                                    , kline_start_time \
+                                    , rank() over(partition by symbol, interval_symbol order by kline_start_time desc) my_rank \
+                                    from stream_klines) abc \
+                            where 1 = 1 \
+                                and my_rank = 1000 \
+                                and abc.symbol = a.symbol \
+                                and abc.interval_symbol = a.interval_symbol \
+                                and abc.kline_start_time > a.kline_start_time)"
+            # print(query)
+            self.curr.execute(query)
+            
+            print("Purge terminated")
+            return 0
+        except :
+            print(colored("purge_stream_klines : unable to do action","red"))
+            raise
+
+
+
+        
