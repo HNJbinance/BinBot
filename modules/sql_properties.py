@@ -69,7 +69,7 @@ class SqlAction:
         
     def retrieve_historical_klines(self, id_symint) :
         try : 
-            query = "select *  from opa.historical_klines where id_symint={0}".format(id_symint)
+            query = "select *  from opa.historical_klines where id_symint={0} order by open_time ".format(id_symint)
             self.curr.execute(query)
             data = self.curr.fetchall()
             # print(colored(data,"red"))
