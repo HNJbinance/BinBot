@@ -48,7 +48,7 @@ for val in symint :
 
     while ( api_starttime < api_endtime and i < max_loop ) : 
         # get historical data of symbol/interval requested from binance REST API
-        klines_data =  client.klines(symbol=db_symbol, interval=db_interval,startTime=db_endtime+1,limit=1000)
+        klines_data =  client.klines(symbol=db_symbol, interval=db_interval,startTime=db_endtime-1,limit=1000)
         # Remove last index of each list (// Unused field. Ignore.)
         klines_data = [klines_data[:-1] for klines_data in klines_data]
 
