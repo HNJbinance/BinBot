@@ -103,18 +103,11 @@ def decision(actual_close_price: float, predict_close_price: float):
 
 def add_user_to_db(user):
     pass 
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 def calculate_model_performance():
     global feats
-    # Chargez le modèle à partir du fichier .pkl
     model = pickle.load(open('../model/rf_regressor.pkl', 'rb'))
-    
-    # Utilisez les données de test ou de validation pour obtenir les prédictions
-
-    # Vous pouvez utiliser les données de test que vous avez créées précédemment
     y_pred = model.predict(feats)
-    
     # Calculez les métriques de performance
     mae = mean_absolute_error(target, y_pred)
     mse = mean_squared_error(target, y_pred)
@@ -127,7 +120,6 @@ def calculate_model_performance():
         "root_mean_squared_error": rmse,
         "r2_score": r2
     }
-    
     return performance_metrics
 
 ##############################################################################################################
@@ -138,17 +130,12 @@ def calculate_model_performance():
 def predict_close_price(username: str = Depends(get_current_username)):
     # global data
     global feats
-    global data
-    # data = data.copy()
-    
-
+    global data    
     # Predict the close price for the next hour
-
     next_hour = data.index[-1] + timedelta(hours=1)
     next_hour_data = feats.iloc[-1:]
     next_hour_close_price = model.predict(next_hour_data)[0]
     actual_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
     return {"symbol":"BTC/USDT", 
             "interval": "1h", 
             "actual_time":actual_time,  
@@ -157,23 +144,18 @@ def predict_close_price(username: str = Depends(get_current_username)):
             "predicted_close_price": round(next_hour_close_price, 2),  
             "decision":decision(close_price_stream, next_hour_close_price)}
 
-
-
 @api.get("/price_history/{symbol}/{interval}")
 def get_price_history(symbol: str, interval: str, start_time: str, end_time: str, username: str = Depends(get_current_username)):
-    # Ici, vous pouvez écrire le code pour récupérer l'historique des prix pour le symbole et l'intervalle donnés
-    # Par exemple, interroger la base de données pour obtenir l'historique des prix
-    price_history = get_price_history_from_db(symbol, interval, start_time, end_time) # Cette fonction doit être définie par vous
-
-    return {"symbol": symbol, "interval": interval, "price_history": price_history}
+    price_history = get_price_history_from_db(symbol, interval, start_time, end_time) 
+    return {"symbol": symbol, 
+            "interval": interval, 
+            "price_history": price_history}
 
 @api.post("/add_user")
 def add_user(user: dict, username: str = Depends(get_current_username)):
-    # Ici, vous pouvez écrire le code pour ajouter un nouvel utilisateur à la base de données
-    # Par exemple, insérer les informations de l'utilisateur dans la table des utilisateurs
-    user_id = add_user_to_db(user) # Cette fonction doit être définie par vous
-
-    return {"message": "User added successfully", "user_id": user_id}
+    user_id = add_user_to_db(user) 
+    return {"message": "User added successfully", 
+            "user_id": user_id}
 
 @api.get("/model_performance")
 def get_model_performance(username: str = Depends(get_current_username)):
