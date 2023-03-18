@@ -16,7 +16,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 
 ##############################################################################################################
-#                                Initialisation : connection, cursor, 
+#                                Initialisation : connection, cursor, dataframe
 ##############################################################################################################
 api = FastAPI()
 security = HTTPBasic()
@@ -25,11 +25,22 @@ cnx = mysql.connector.connect(user='root', password='temp123',
                               database='opa')
 cursor = cnx.cursor()
 
-df = pd.read_csv("../model/data.csv")
+# df = pd.read_csv("../model/data.csv")
 model = pickle.load(open('../model/rf_regressor.pkl','rb'))
+##############################################################################################################
+#                                Loading data from opa database 
+##############################################################################################################
+query1 = "SELECT * FROM historical_klines"
+cursor.execute(query1)
 
-query = "SELECT close_price FROM stream_klines"
-cursor.execute(query)
+# Load the data into a Pandas DataFrame
+data = pd.DataFrame(cursor.fetchall(), columns=['id_symint', 'open_time', 'open_price', 'high_price', 'low_price',
+       'close_price', 'volume', 'close_time', 'quote_asset_volume',
+       'number_of_trades', 'taker_buy_base_asset_volume',
+       'taker_buy_quote_asset_volume'])
+
+query2 = "SELECT close_price FROM stream_klines"
+cursor.execute(query2)
 result = cursor.fetchall()
 close_price_stream_list = [row[0] for row in result]
 close_price_stream = close_price_stream_list[0]
@@ -75,8 +86,8 @@ def decision(actual_close_price: float, predict_close_price: float):
 
 @api.get("/predict")
 def predict_close_price(username: str = Depends(get_current_username)):
-    data = df.copy()
-
+    global data
+    data = data.copy()
     data['close_time'] = pd.to_datetime(data['close_time'], unit='ms')
     data = data.set_index('close_time')
     data.sort_index(inplace=True)
@@ -96,6 +107,7 @@ def predict_close_price(username: str = Depends(get_current_username)):
     target = data['close_price']
 
     # Predict the close price for the next hour
+
     next_hour = data.index[-1] + timedelta(hours=1)
     next_hour_data = feats.iloc[-1:]
     next_hour_close_price = model.predict(next_hour_data)[0]
