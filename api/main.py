@@ -87,7 +87,7 @@ def decision(actual_close_price: float, predict_close_price: float):
 @api.get("/predict")
 def predict_close_price(username: str = Depends(get_current_username)):
     global data
-    data = data.copy()
+    # data = data.copy()
     data['close_time'] = pd.to_datetime(data['close_time'], unit='ms')
     data = data.set_index('close_time')
     data.sort_index(inplace=True)
