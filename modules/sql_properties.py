@@ -33,6 +33,7 @@ class SqlAction:
             print(colored(symint,"red"))
         except :
             print(colored("get_symbol_interval : unable to do action","red"))
+            raise
 
     def update_symbol_interval_starttime(self, id_symint, starttime) :        
         try : 
@@ -49,6 +50,7 @@ class SqlAction:
             self.conn.commit()  
         except :
             print(colored("update_symbol_interval : unable to do action","red"))
+            raise
 #############################################################################################################
 # OPA HISTORICAL KLINES FUNCTIONS
 #############################################################################################################
@@ -76,6 +78,7 @@ class SqlAction:
             return data
         except :
             print(colored("get_symbol_interval : unable to do action","red"))
+            raise
 
 #############################################################################################################
 # OPA STREAM KLINES FUNCTIONS
@@ -120,7 +123,6 @@ class SqlAction:
             self.curr.execute(query,varlist)
             self.conn.commit()
             print("1 row was inserted.")
-
             return 
         except :
             print(colored("store_historical_klines : unable to do action","red"))
