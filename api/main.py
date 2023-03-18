@@ -1,4 +1,4 @@
-# import mysql.connector
+import mysql.connector
 
 from datetime import timedelta, datetime
 
@@ -14,23 +14,29 @@ from pydantic import BaseModel
 from fastapi import Depends,  HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
+
+##############################################################################################################
+#                                Initialisation : connection, cursor, 
+##############################################################################################################
+api = FastAPI()
+security = HTTPBasic()
+cnx = mysql.connector.connect(user='root', password='temp123',
+                              host='172.17.0.2', port='3306',
+                              database='opa')
+cursor = cnx.cursor()
+
 df = pd.read_csv("../model/data.csv")
 model = pickle.load(open('../model/rf_regressor.pkl','rb'))
 
-api = FastAPI()
-
-security = HTTPBasic()
-
-# cnx = mysql.connector.connect(user='root', password='temp123',
-#                               host='172.17.0.2', port='3306',
-#                               database='opa')
-# ## remplacer host par l'ID de votre machine virtuelle 
-# ## port : représente le port ou elle est logée notre DB sur le docker 
-# cursor = cnx.cursor()
-
-
-
-## Authentifiaction & authorisation :
+query = "SELECT close_price FROM stream_klines"
+cursor.execute(query)
+result = cursor.fetchall()
+close_price_stream_list = [row[0] for row in result]
+close_price_stream = close_price_stream_list[0]
+##############################################################################################################
+#                                Constantes
+##############################################################################################################
+# Authentifiaction & authorisation :
 users = {
   "ilham": "noumir",
   "hamza": "ennaji",
@@ -38,7 +44,14 @@ users = {
    "souhila" : "lebib",
     "simon" : "cariou"
 }
+lag_columns = ['open_price', 'high_price', 'low_price', 'close_price', 'volume', 
+               'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume', 
+               'taker_buy_quote_asset_volume']
 
+lag_count = 6
+##############################################################################################################
+#                                functions 
+##############################################################################################################
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     for key, value in users.items():
         if credentials.username==key and credentials.password==value:
@@ -49,7 +62,16 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
         detail="Incorrect username or password",
         headers={"WWW-Authenticate": "Basic"},
     )
-
+def decision(actual_close_price: float, predict_close_price: float):
+    if actual_close_price > predict_close_price:
+        return "buy"
+    elif actual_close_price < predict_close_price:
+        return "sell"
+    else:
+        return "hold"
+##############################################################################################################
+#                                api 
+##############################################################################################################
 
 @api.get("/predict")
 def predict_close_price(username: str = Depends(get_current_username)):
@@ -60,15 +82,8 @@ def predict_close_price(username: str = Depends(get_current_username)):
     data.sort_index(inplace=True)
 
     # Fill any missing values
-    data = data.ffill()
-
+    data = data.ffill()    
     # Create lagged features for the Random Forest model
-    lag_columns = ['open_price', 'high_price', 'low_price', 'close_price', 'volume', 
-               'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume', 
-               'taker_buy_quote_asset_volume']
-
-    lag_count = 6
-
     for col in lag_columns:
         for lag in range(1, lag_count + 1):
             data[f'{col}_lag{lag}'] = data[col].shift(lag)
@@ -86,8 +101,13 @@ def predict_close_price(username: str = Depends(get_current_username)):
     next_hour_close_price = model.predict(next_hour_data)[0]
     actual_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    return {"symbol":"BTC/USDT", "interval": "1h", "actual_time":actual_time,  "actual_price":"streaming", "next_hour": next_hour.strftime("%Y-%m-%d %H:%M:%S"), "predicted_close_price": round(next_hour_close_price, 2),  "decision":"#######"}
-    #return {"predicted_close_price": round(next_hour_close_price, 2)}
+    return {"symbol":"BTC/USDT", 
+            "interval": "1h", 
+            "actual_time":actual_time,  
+            "actual_price":close_price_stream, 
+            "next_hour": next_hour.strftime("%Y-%m-%d %H:%M:%S"), 
+            "predicted_close_price": round(next_hour_close_price, 2),  
+            "decision":decision(close_price_stream, next_hour_close_price)}
 
 
 
