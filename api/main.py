@@ -95,9 +95,9 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     )
 def decision(actual_close_price: float, predict_close_price: float):
     if actual_close_price > predict_close_price:
-        return "buy"
-    elif actual_close_price < predict_close_price:
         return "sell"
+    elif actual_close_price < predict_close_price:
+        return "buy"
     else:
         return "hold"
 
