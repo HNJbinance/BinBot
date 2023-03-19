@@ -121,7 +121,7 @@ def calculate_model_performance():
         "r2_score": r2
     }
     return performance_metrics
-    
+
 def get_price_history_from_db(start_time: str, end_time: str, interval: str, symbole:str ='BTC'):
     global data
     df_price= data[['close_price']]
@@ -142,6 +142,21 @@ def get_price_history_from_db(start_time: str, end_time: str, interval: str, sym
 
 @api.get("/predict")
 def predict_close_price(username: str = Depends(get_current_username)):
+    """
+    Prédit le prix de clôture pour la prochaine heure en utilisant le modèle entraîné RandomForestRegressor.
+    
+    L'utilisateur doit être authentifié pour accéder à cette fonction.
+    
+    Retourne:
+        Un dictionnaire contenant les informations suivantes:
+        - symbol (str): Le symbole de la paire de trading, par exemple "BTC/USDT".
+        - interval (str): L'intervalle de temps pour la prédiction, ici "1h" pour une heure.
+        - actual_time (str): L'heure actuelle au format 'YYYY-MM-DD HH:MM:SS'.
+        - actual_price (float): Le prix de clôture actuel récupéré depuis le flux en temps réel.
+        - next_hour (str): L'heure de la prochaine prédiction au format 'YYYY-MM-DD HH:MM:SS'.
+        - predicted_close_price (float): Le prix de clôture prédit pour la prochaine heure, arrondi à 2 décimales.
+        - decision (str): La décision recommandée basée sur la prédiction ("buy", "sell" ou "hold").
+    """
     # global data
     global feats
     global data    
@@ -184,6 +199,18 @@ def add_user(user: dict, username: str = Depends(get_current_username)):
 
 @api.get("/model_performance")
 def get_model_performance(username: str = Depends(get_current_username)):
+    """
+    Calcule et retourne les métriques de performance du modèle RandomForestRegressor pour les données d'entraînement.
+    
+    L'utilisateur doit être authentifié pour accéder à cette fonction.
+    
+    Retourne:
+        Un dictionnaire contenant les métriques de performance suivantes :
+        - mean_absolute_error (float): L'erreur absolue moyenne entre les prédictions du modèle et les valeurs réelles.
+        - mean_squared_error (float): L'erreur quadratique moyenne entre les prédictions du modèle et les valeurs réelles.
+        - root_mean_squared_error (float): La racine carrée de l'erreur quadratique moyenne.
+        - r2_score (float): Le coefficient de détermination R², qui mesure la proportion de la variance expliquée par le modèle.
+    """
     performance_metrics = calculate_model_performance() 
     return {"model_performance": performance_metrics}
 
