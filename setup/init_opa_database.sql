@@ -33,6 +33,7 @@ use opa;
 drop table if exists historical_klines ;
 drop table if exists stream_klines ;
 drop table if exists symbol_interval ;
+drop table if exists api_users ;
 create table if not exists symbol_interval
     (
         id_symint       int not null
@@ -122,3 +123,94 @@ create table if not exists stream_klines
         , foreign key(id_symint) references symbol_interval(id_symint)*/
     )
     engine = memory;
+-- -------------------------------------------------------------------
+-- creating and populate api_users table
+-- -------------------------------------------------------------------
+drop table if exists api_users ;
+create table api_users
+    (
+        id_api_users int not null
+      , name         varchar(30) not null
+      , lastname     varchar(30) not null
+      , date_insert timestamp not null
+      , date_update timestamp not null
+      , last_login timestamp null
+      , is_active    boolean not null
+      , login        varchar(30) not null
+      , password     varchar(30) not null
+      , validity_day int not null
+      , primary key(id_api_users)
+    )
+    engine = innodb default charset = utf8mb4 default collate = utf8mb4_0900_ai_ci;
+insert
+into api_users values
+    (
+        1
+      , 'ilham'
+      , 'noumir'
+      , now()
+      , now()
+      , null
+      , 1
+      , 'hennaji'
+      , 'temp123'
+      , 180
+    ) ;
+insert
+into api_users values
+    (
+        2
+      , 'hamza'
+      , 'ennaji'
+      , now()
+      , now()
+      , null
+      , 1
+      , 'hennaji'
+      , 'temp123'
+      , 180
+    ) ;
+insert
+into api_users values
+    (
+        3
+      , 'loic'
+      , 'montagnac'
+      , now()
+      , now()
+      , null
+      , 1
+      , 'lmontagnac'
+      , 'temp123'
+      , 180
+    ) ;
+insert
+into api_users values
+    (
+        4
+      , 'souhila'
+      , 'lebib'
+      , now()
+      , now()
+      , null
+      , 1
+      , 'slebib'
+      , 'temp123'
+      , 180
+    ) ;
+insert
+into api_users values
+    (
+        5
+      , 'simon'
+      , 'cariou'
+      , now()
+      , now()
+      , null
+      , 1
+      , 'scariou'
+      , 'temp123'
+      , 180
+    ) ;
+select *
+from api_users
