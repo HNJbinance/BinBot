@@ -1,6 +1,6 @@
 echo "starting mysql container..."
 docker start mysql_container
-sleep 10
+sleep 2
 
 echo "starting get_stream_data.py in background..."
 pkill -f get_stream_data.py
