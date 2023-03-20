@@ -58,16 +58,14 @@ into symbol_interval values
       , 0
     ) ;
     
-
 /* 
  insert into symbol_interval values (2, 'BTCUSDT', '15m', now(), now(), 0, 0) ;
  insert into symbol_interval values (3, 'BTCUSDT', '5m', now(), now(), 0, 0) ;
  insert into symbol_interval values (4, 'BTCUSDT', '1m', now(), now(), 0, 0) ;
  insert into symbol_interval values (5, 'BTCUSDT', '1s', now(), now(), 0, 0) ;
- insert into symbol_interval values (6, 'ETHUSDT', '1s', now(), now(), 0, 0) ;
- insert into symbol_interval values (7, 'XRPUSDT', '1s', now(), now(), 0, 0) ;
+ insert into symbol_interval values (6, 'ETHUSDT', '1m', now(), now(), 0, 0) ;
+ insert into symbol_interval values (7, 'XRPUSDT', '1m', now(), now(), 0, 0) ;
  */
-
 -- ------------------------------------------------------------------- 
 drop table if exists historical_klines ;
 create table if not exists historical_klines
