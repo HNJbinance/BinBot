@@ -127,7 +127,7 @@ create table if not exists stream_klines
 drop table if exists api_users ;
 create table api_users
     (
-        id_api_users int not null
+        id_api_users int not null 
       , name         varchar(30) not null
       , lastname     varchar(30) not null
       , date_insert timestamp not null

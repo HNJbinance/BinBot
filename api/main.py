@@ -33,13 +33,13 @@ model = pickle.load(open('../model/rf_regressor.pkl','rb'))
 #                                Constantes
 ##############################################################################################################
 # Authentifiaction & authorisation :
-users = {
-  "ilham": "noumir",
-  "hamza": "ennaji",
-  "loic": "montagnac",
-   "souhila" : "lebib",
-    "simon" : "cariou"
-}
+# users = {
+#   "ilham": "noumir",
+#   "hamza": "ennaji",
+#   "loic": "montagnac",
+#    "souhila" : "lebib",
+#     "simon" : "cariou"
+# }
 lag_columns = ['open_price', 'high_price', 'low_price', 'close_price', 'volume', 
                'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume', 
                'taker_buy_quote_asset_volume']
@@ -86,9 +86,6 @@ query3 = "SELECT login, password FROM api_users WHERE is_active = 1"
 cursor.execute(query3)
 rows = cursor.fetchall()
 
-
-
-
 ##############################################################################################################
 #                                functions 
 ##############################################################################################################
@@ -110,8 +107,17 @@ def decision(actual_close_price: float, predict_close_price: float):
     else:
         return "hold"
 
-def add_user_to_db(user):
-    pass 
+def add_user_to_db(name: str, lastname: str, login: str, password: str):
+    # Prepare an INSERT query to add the new user to the api_users table
+    query = "INSERT INTO api_users (name, lastname, login, password) VALUES (%s, %s, %s, %s)"
+    values = (name, lastname, login, password)
+    # Execute the query and commit the transaction
+    cursor.execute(query, values)
+    cnx.commit()
+    # Close the database connection
+    cnx.close()
+    # Print a message indicating that the user has been created
+    print("User created successfully")
 
 def calculate_model_performance():
     global feats
@@ -202,11 +208,14 @@ def get_price_history(start_time: str, end_time: str, interval: str, symbol:str 
     price_history = get_price_history_from_db(start_time, end_time, interval, symbol)
     return price_history
 
-@api.post("/add_user")
-def add_user(user: dict, username: str = Depends(get_current_username)):
-    user_id = add_user_to_db(user) 
+@api.post("/add_user/{name}/{lastname}/{login}/{password}")
+def add_user(name:str, lastname:str, login:str, password:str, username: str = Depends(get_current_username)):
+    add_user_to_db(name, lastname, login, password) 
     return {"message": "User added successfully", 
-            "user_id": user_id}
+            "name": name,
+            "lastname":lastname,
+            "login":login,
+            "password":password}
 
 @api.get("/model_performance")
 def get_model_performance(username: str = Depends(get_current_username)):
