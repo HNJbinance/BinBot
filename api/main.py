@@ -80,12 +80,21 @@ cursor.execute(query2)
 result = cursor.fetchall()
 close_price_stream_list = [row[0] for row in result]
 close_price_stream = close_price_stream_list[0]
+
+# Prepare a SELECT query to check the username and password against the api_users table
+query3 = "SELECT login, password FROM api_users WHERE is_active = 1"
+cursor.execute(query3)
+rows = cursor.fetchall()
+
+
+
+
 ##############################################################################################################
 #                                functions 
 ##############################################################################################################
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
-    for key, value in users.items():
-        if credentials.username==key and credentials.password==value:
+    for user in rows:
+        if credentials.username==user[0] and credentials.password==user[1]:
             return credentials.username
 
     raise HTTPException(
@@ -135,6 +144,8 @@ def get_price_history_from_db(start_time: str, end_time: str, interval: str, sym
     
     return prices_data
 
+def calculate_moving_average(data: pd.DataFrame, window: int):
+    return data['close_price'].rolling(window=window).mean()
 
 ##############################################################################################################
 #                                api 
@@ -214,3 +225,31 @@ def get_model_performance(username: str = Depends(get_current_username)):
     performance_metrics = calculate_model_performance() 
     return {"model_performance": performance_metrics}
 
+@api.get("/moving_averages/{symbol}/{interval}/{window}")
+def get_moving_averages(symbol: str, interval: str, window: int, username: str = Depends(get_current_username)):
+    """
+    Calcule et renvoie les moyennes mobiles pour un symbole de trading, un intervalle de temps et une fenêtre de temps spécifiés.
+    
+    Args:
+        symbol (str): Le symbole de la paire de trading, par exemple "BTC/USDT".
+        interval (str): L'intervalle de temps pour le calcul, par exemple "1h" pour une heure.
+        window (int): La taille de la fenêtre pour le calcul de la moyenne mobile.
+    
+    L'utilisateur doit être authentifié pour accéder à cette fonction.
+    
+    Retourne:
+        Un dictionnaire contenant les informations suivantes:
+        - symbol (str): Le symbole de la paire de trading, par exemple "BTC/USDT".
+        - interval (str): L'intervalle de temps pour le calcul, par exemple "1h" pour une heure.
+        - moving_average (pd.Series): La série temporelle des moyennes mobiles calculées.
+    """
+    global data
+
+    resampled_data = data[['close_price']].resample(interval).last()
+    moving_averages = calculate_moving_average(resampled_data, window)
+    
+    moving_averages_data = []
+    for date, value in moving_averages.items():
+        moving_averages_data.append({"symbol": symbol, "interval": interval, "date": date.strftime('%Y-%m-%d %H:%M:%S'), "moving_average": value})
+    
+    return moving_averages_data
