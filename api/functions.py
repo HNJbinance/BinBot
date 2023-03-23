@@ -145,19 +145,12 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     )
 
 
-def decision(actual_close_price: float, predict_close_price: float):
-    if actual_close_price > predict_close_price:
-        return "sell"
-    elif actual_close_price < predict_close_price:
-        return "buy"
-    else:
-        return "hold"
-
-
-def add_user_to_db(name: str, lastname: str, login: str, password: str):
+def add_user_to_db(
+    id_api_users: int, name: str, lastname: str, login: str, password: str
+):
     # Prepare an INSERT query to add the new user to the api_users table
-    query = "INSERT INTO api_users (name, lastname, login, password) VALUES (%s, %s, %s, %s)"
-    values = (name, lastname, login, password)
+    query = "INSERT INTO api_users (id_api_users , name, lastname, date_insert , date_update , last_login , is_active, login, password, validity_day ) VALUES (%s, %s, %s,NOW(),NOW(),NULL,TRUE,%s,%s,180)"
+    values = (id_api_users, name, lastname, login, password)
     # Execute the query and commit the transaction
     cursor.execute(query, values)
     cnx.commit()
@@ -167,9 +160,36 @@ def add_user_to_db(name: str, lastname: str, login: str, password: str):
     print("User created successfully")
 
 
+def update_user_db(id_api_users: int, name: str, lastname: str, login: str, password: str
+):
+
+    # Prepare an UPDATE query to modify the existing user in the api_users table
+    query = "UPDATE api_users SET name = %s, lastname = %s, login = %s, password = %s WHERE id_api_users = %s"
+    values = ( name, lastname, login, password, id_api_users)
+
+    # Execute the query and commit the transaction
+    cursor.execute(query, values)
+    cnx.commit()
+
+    # Close the database connection
+    cnx.close()
+
+    # Return a JSON response indicating that the user has been updated
+    return {"message": "User updated successfully"}
+
+
+def decision(actual_close_price: float, predict_close_price: float):
+    if actual_close_price > predict_close_price:
+        return "sell"
+    elif actual_close_price < predict_close_price:
+        return "buy"
+    else:
+        return "hold"
+
+
 def calculate_model_performance():
     global feats
-    model = pickle.load(open("../model/rf_regressor.pkl", "rb"))
+    model = pickle.load(open("../model/best_model.pkl", "rb"))
     y_pred = model.predict(feats)
     # Calculez les métriques de performance
     mae = mean_absolute_error(target, y_pred)

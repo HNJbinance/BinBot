@@ -6,6 +6,34 @@ from functions import *
 ##############################################################################################################
 
 
+@api.post("/add_user/{id_api_users}/{name}/{lastname}/{login}/{password}")
+def add_user(id_api_users: int,
+    name: str,
+    lastname: str,
+    login: str,
+    password: str,
+    username: str = Depends(get_current_username),
+):
+    add_user_to_db(id_api_users, name, lastname, login, password)
+    return {
+        "message": "User added successfully",
+        "name": name,
+        "lastname": lastname,
+        "login": login,
+        "password": password,
+    }
+
+@api.put("/users/{id_api_users}")
+def update_user(id_api_users: int, name: str, lastname: str, login: str, password: str, username: str = Depends(get_current_username)):
+    update_user_db(id_api_users, name, lastname, login, password)
+    return {
+        "message": "User updated successfully",
+        "name": name,
+        "lastname": lastname,
+        "login": login,
+        "password": password,
+    }
+
 @api.get("/predict")
 def predict_close_price(username: str = Depends(get_current_username)):
     """
@@ -65,24 +93,6 @@ def get_price_history(
     """
     price_history = get_price_history_from_db(start_time, end_time, interval, symbol)
     return price_history
-
-
-@api.post("/add_user/{name}/{lastname}/{login}/{password}")
-def add_user(
-    name: str,
-    lastname: str,
-    login: str,
-    password: str,
-    username: str = Depends(get_current_username),
-):
-    add_user_to_db(name, lastname, login, password)
-    return {
-        "message": "User added successfully",
-        "name": name,
-        "lastname": lastname,
-        "login": login,
-        "password": password,
-    }
 
 
 @api.get("/model_performance")
