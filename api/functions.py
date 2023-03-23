@@ -160,12 +160,12 @@ def add_user_to_db(
     print("User created successfully")
 
 
-def update_user_db(id_api_users: int, name: str, lastname: str, login: str, password: str
+def update_user_db(
+    id_api_users: int, name: str, lastname: str, login: str, password: str
 ):
-
     # Prepare an UPDATE query to modify the existing user in the api_users table
     query = "UPDATE api_users SET name = %s, lastname = %s, login = %s, password = %s WHERE id_api_users = %s"
-    values = ( name, lastname, login, password, id_api_users)
+    values = (name, lastname, login, password, id_api_users)
 
     # Execute the query and commit the transaction
     cursor.execute(query, values)
@@ -176,6 +176,21 @@ def update_user_db(id_api_users: int, name: str, lastname: str, login: str, pass
 
     # Return a JSON response indicating that the user has been updated
     return {"message": "User updated successfully"}
+
+
+def delete_user_db(id_api_users):
+    # Prepare a DELETE query to remove the existing user from the api_users table
+    query = "DELETE FROM api_users WHERE id_api_users = %s"
+    values = id_api_users
+
+    cursor.execute(query, values)
+    cnx.commit()
+
+    # Close the database connection
+    cnx.close()
+
+    # Return a JSON response indicating that the user has been deleted
+    return {"message": "User deleted successfully"}
 
 
 def decision(actual_close_price: float, predict_close_price: float):

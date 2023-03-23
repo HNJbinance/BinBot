@@ -7,7 +7,8 @@ from functions import *
 
 
 @api.post("/add_user/{id_api_users}/{name}/{lastname}/{login}/{password}")
-def add_user(id_api_users: int,
+def add_user(
+    id_api_users: int,
     name: str,
     lastname: str,
     login: str,
@@ -23,8 +24,16 @@ def add_user(id_api_users: int,
         "password": password,
     }
 
-@api.put("/users/{id_api_users}")
-def update_user(id_api_users: int, name: str, lastname: str, login: str, password: str, username: str = Depends(get_current_username)):
+
+@api.put("/users/{id_api_users}/{name}/{lastname}/{login}/{password}")
+def update_user(
+    id_api_users: int,
+    name: str,
+    lastname: str,
+    login: str,
+    password: str,
+    username: str = Depends(get_current_username),
+):
     update_user_db(id_api_users, name, lastname, login, password)
     return {
         "message": "User updated successfully",
@@ -33,6 +42,15 @@ def update_user(id_api_users: int, name: str, lastname: str, login: str, passwor
         "login": login,
         "password": password,
     }
+
+
+@api.delete("/users/{id_api_users}")
+def delete_user(id_api_users: int):
+    delete_user_db(id_api_users)
+
+    # Return a JSON response indicating that the user has been deleted
+    return {"message": "User deleted successfully"}
+
 
 @api.get("/predict")
 def predict_close_price(username: str = Depends(get_current_username)):
