@@ -45,7 +45,7 @@ def update_user(
 
 
 @api.delete("/users/{id_api_users}")
-def delete_user(id_api_users: int):
+def delete_user(id_api_users: int, username: str = Depends(get_current_username)):
     delete_user_db(id_api_users)
 
     # Return a JSON response indicating that the user has been deleted

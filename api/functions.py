@@ -178,10 +178,10 @@ def update_user_db(
     return {"message": "User updated successfully"}
 
 
-def delete_user_db(id_api_users):
+def delete_user_db(id_api_users: int):
     # Prepare a DELETE query to remove the existing user from the api_users table
     query = "DELETE FROM api_users WHERE id_api_users = %s"
-    values = id_api_users
+    values = (id_api_users)
 
     cursor.execute(query, values)
     cnx.commit()
