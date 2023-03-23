@@ -29,7 +29,7 @@ cnx = mysql.connector.connect(
 cursor = cnx.cursor()
 
 # df = pd.read_csv("../model/data.csv")
-model = pickle.load(open("../model/rf_regressor.pkl", "rb"))
+model = pickle.load(open("../model/best_model.pkl", "rb"))
 ##############################################################################################################
 #                                Constantes
 ##############################################################################################################
@@ -55,7 +55,7 @@ def retrieve_hklines_db() :
     query1 = "SELECT * FROM historical_klines"
     cursor.execute(query1)
     # Load the data into a Pandas DataFrame
-    data = pd.DataFrame(
+    df = pd.DataFrame(
         cursor.fetchall(),
         columns=[
             "id_symint",
@@ -72,12 +72,12 @@ def retrieve_hklines_db() :
             "taker_buy_quote_asset_volume",
         ],
     )
-    data["close_time"] = pd.to_datetime(data["close_time"], unit="ms")
-    data = data.set_index("close_time")
-    data.sort_index(inplace=True)
+    df["close_time"] = pd.to_datetime(df["close_time"], unit="ms")
+    df = df.set_index("close_time")
+    df.sort_index(inplace=True)
     # Fill any missing values
-    data = data.ffill()
-    return data
+    df = df.ffill()
+    return df
 
 
 data = retrieve_hklines_db()
