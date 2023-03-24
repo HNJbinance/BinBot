@@ -6,7 +6,7 @@ from functions import *
 ##############################################################################################################
 
 
-@api.post("/add_user/{id_api_users}/{name}/{lastname}/{login}/{password}")
+@api.post("/add_user/{id_api_users}")
 def add_user(
     id_api_users: int,
     name: str,
@@ -15,6 +15,19 @@ def add_user(
     password: str,
     username: str = Depends(get_current_username),
 ):
+    """
+    Ajoute un utilisateur à la base de données avec les informations fournies dans la requête.
+    Args:
+        id_api_users (int): L'ID de l'utilisateur à ajouter à la base de données.
+        name (str): Le nom de l'utilisateur à ajouter à la base de données.
+        lastname (str): Le nom de famille de l'utilisateur à ajouter à la base de données.
+        login (str): Le nom d'utilisateur de l'utilisateur à ajouter à la base de données.
+        password (str): Le mot de passe de l'utilisateur à ajouter à la base de données.
+        username (str): Le nom d'utilisateur actuel de l'utilisateur authentifié.
+
+    Returns:
+        Un dictionnaire contenant un message de confirmation et les informations de l'utilisateur ajouté.
+    """
     add_user_to_db(id_api_users, name, lastname, login, password)
     return {
         "message": "User added successfully",
@@ -25,7 +38,7 @@ def add_user(
     }
 
 
-@api.put("/users/{id_api_users}/{name}/{lastname}/{login}/{password}")
+@api.put("/users/{id_api_users}")
 def update_user(
     id_api_users: int,
     name: str,
@@ -34,6 +47,19 @@ def update_user(
     password: str,
     username: str = Depends(get_current_username),
 ):
+    """
+    Met à jour les informations d'un utilisateur dans la base de données avec les informations fournies dans la requête.
+    Args:
+        id_api_users (int): L'ID de l'utilisateur à mettre à jour dans la base de données.
+        name (str): Le nouveau nom de l'utilisateur à mettre à jour dans la base de données.
+        lastname (str): Le nouveau nom de famille de l'utilisateur à mettre à jour dans la base de données.
+        login (str): Le nouveau nom d'utilisateur de l'utilisateur à mettre à jour dans la base de données.
+        password (str): Le nouveau mot de passe de l'utilisateur à mettre à jour dans la base de données.
+        username (str): Le nom d'utilisateur actuel de l'utilisateur authentifié.
+
+    Returns:
+        Un dictionnaire contenant un message de confirmation et les informations de l'utilisateur mis à jour.
+    """
     update_user_db(id_api_users, name, lastname, login, password)
     return {
         "message": "User updated successfully",
@@ -46,6 +72,15 @@ def update_user(
 
 @api.delete("/users/{id_api_users}")
 def delete_user(id_api_users: int, username: str = Depends(get_current_username)):
+    """
+    Supprime un utilisateur de la base de données avec l'ID spécifié.
+    Args:
+        id_api_users (int): L'ID de l'utilisateur à supprimer de la base de données.
+        username (str): Le nom d'utilisateur actuel de l'utilisateur authentifié.
+
+    Returns:
+        Un dictionnaire contenant un message de confirmation de la suppression de l'utilisateur.
+    """
     delete_user_db(id_api_users)
 
     # Return a JSON response indicating that the user has been deleted
@@ -131,43 +166,19 @@ def get_model_performance(username: str = Depends(get_current_username)):
     return {"model_performance": performance_metrics}
 
 
-@api.get("/moving_averages/{symbol}/{interval}/{window}")
-def get_moving_averages(
-    symbol: str,
-    interval: str,
-    window: int,
-    username: str = Depends(get_current_username),
-):
+@api.post("/retrain_model")
+def retrain_model(username: str = Depends(get_current_username)):
     """
-    Calcule et renvoie les moyennes mobiles pour un symbole de trading, un intervalle de temps et une fenêtre de temps spécifiés.
-
-    Args:
-        symbol (str): Le symbole de la paire de trading, par exemple "BTC/USDT".
-        interval (str): L'intervalle de temps pour le calcul, par exemple "1h" pour une heure.
-        window (int): La taille de la fenêtre pour le calcul de la moyenne mobile.
+    Réentraîne le modèle de prédiction avec les données stockées dans la base de données.
 
     L'utilisateur doit être authentifié pour accéder à cette fonction.
 
     Retourne:
         Un dictionnaire contenant les informations suivantes:
-        - symbol (str): Le symbole de la paire de trading, par exemple "BTC/USDT".
-        - interval (str): L'intervalle de temps pour le calcul, par exemple "1h" pour une heure.
-        - moving_average (pd.Series): La série temporelle des moyennes mobiles calculées.
+        - message (str): Un message indiquant que l'entraînement du modèle s'est terminé avec succès.
     """
-    global data
+    global model, feats, target
+    
+    model = train_model(feats, target)
 
-    resampled_data = data[["close_price"]].resample(interval).last()
-    moving_averages = calculate_moving_average(resampled_data, window)
-
-    moving_averages_data = []
-    for date, value in moving_averages.items():
-        moving_averages_data.append(
-            {
-                "symbol": symbol,
-                "interval": interval,
-                "date": date.strftime("%Y-%m-%d %H:%M:%S"),
-                "moving_average": value,
-            }
-        )
-
-    return moving_averages_data
+    return {"message": "Le modèle a été réentraîné avec succès."}
