@@ -8,7 +8,6 @@ services:
       MYSQL_ROOT_PASSWORD: temp123
     ports:  
       - "3306:3306"
-    network_mode: "host" 
     healthcheck:  
       test: ["CMD-SHELL", "mysql --user=root --password=temp123 --execute='SELECT 1'"]  
       interval: 10s  
@@ -55,8 +54,4 @@ services:
       - mynetwork
 networks:  
   mynetwork:  
-    driver: bridge  
-    ipam:  
-      driver: default  
-      config:  
-        - subnet: 192.168.0.0/24  
+    driver: bridge 

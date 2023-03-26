@@ -23,7 +23,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 api = FastAPI()
 security = HTTPBasic()
 cnx = mysql.connector.connect(
-    user="root", password=os.environ.get("MYSQL_PASSWORD"), host=os.environ.get('MYSQL_ADDRESS'), port="3306", database="opa"
+    user="root", password=os.environ.get("MYSQL_PASSWORD"), host=os.environ.get('MYSQL_HOST'), port="3306", database="opa"
 )
 cursor = cnx.cursor()
 # df = pd.read_csv("../model/data.csv")
