@@ -8,18 +8,17 @@ client = TestClient(api)
 
 
 def test_add_user():
-    # auth_string = "hennaji:temp123"
-    # auth_string_b64 = base64.b64encode(auth_string.encode()).decode()
-
+    
     response = client.post(
-        "/add_user/6",
-        data={
+        "/add_user/1000",
+        auth=("hennaji", "temp123"),
+        json={
             "name": "John",
             "lastname": "Doe",
             "login": "johndoe",
             "password": "password123",
         },
-        auth=("hennaji", "temp123"),
+        
     )
 
     assert response.status_code == 200, f"Unexpected response: {response.json()}"
@@ -30,18 +29,21 @@ def test_add_user():
         "login": "johndoe",
         "password": "password123",
     }
+    cnx.close()
+
 
 
 def test_update_user():
     response = client.put(
-        "/users/6",
+        "/users/1000",
+        auth=("hennaji", "temp123"),
         json={
             "name": "John",
             "lastname": "Smith",
             "login": "johnsmith",
             "password": "password123",
         },
-        auth=("hennaji", "temp123"),
+        
     )
     assert response.status_code == 200, f"Unexpected response: {response.json()}"
     assert response.json() == {
@@ -51,12 +53,16 @@ def test_update_user():
         "login": "johnsmith",
         "password": "password123",
     }
+    cnx.close()
+
 
 
 def test_delete_user():
-    response = client.delete("/users/6", auth=("hennaji", "temp123"))
+    response = client.delete("/users/1000", auth=("hennaji", "temp123"))
     assert response.status_code == 200, f"Unexpected response: {response.json()}"
     assert response.json() == {"message": "User deleted successfully"}
+    cnx.close()
+
 
 
 def test_predict_close_price():

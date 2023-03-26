@@ -1,74 +1,123 @@
 from functions import *
+from pydantic import BaseModel
 
+class UserBase(BaseModel):
+    name: str
+    lastname: str
+    login: str
+    password: str
 
 ##############################################################################################################
 #                                api
 ##############################################################################################################
 
 
+# @api.post("/add_user/{id_api_users}")
+# def add_user(
+#     id_api_users: int,
+#     name: str,
+#     lastname: str,
+#     login: str,
+#     password: str,
+#     username: str = Depends(get_current_username),
+# ):
+#     """
+#     Ajoute un utilisateur à la base de données avec les informations fournies dans la requête.
+#     Args:
+#         id_api_users (int): L'ID de l'utilisateur à ajouter à la base de données.
+#         name (str): Le nom de l'utilisateur à ajouter à la base de données.
+#         lastname (str): Le nom de famille de l'utilisateur à ajouter à la base de données.
+#         login (str): Le nom d'utilisateur de l'utilisateur à ajouter à la base de données.
+#         password (str): Le mot de passe de l'utilisateur à ajouter à la base de données.
+#         username (str): Le nom d'utilisateur actuel de l'utilisateur authentifié.
+
+#     Returns:
+#         Un dictionnaire contenant un message de confirmation et les informations de l'utilisateur ajouté.
+#     """
+#     add_user_to_db(id_api_users, name, lastname, login, password)
+#     return {
+#         "message": "User added successfully",
+#         "name": name,
+#         "lastname": lastname,
+#         "login": login,
+#         "password": password,
+#     }
+
 @api.post("/add_user/{id_api_users}")
 def add_user(
     id_api_users: int,
-    name: str,
-    lastname: str,
-    login: str,
-    password: str,
+    user: UserBase,
     username: str = Depends(get_current_username),
 ):
     """
     Ajoute un utilisateur à la base de données avec les informations fournies dans la requête.
     Args:
         id_api_users (int): L'ID de l'utilisateur à ajouter à la base de données.
-        name (str): Le nom de l'utilisateur à ajouter à la base de données.
-        lastname (str): Le nom de famille de l'utilisateur à ajouter à la base de données.
-        login (str): Le nom d'utilisateur de l'utilisateur à ajouter à la base de données.
-        password (str): Le mot de passe de l'utilisateur à ajouter à la base de données.
+        user (UserBase): Les informations de l'utilisateur à ajouter à la base de données.
         username (str): Le nom d'utilisateur actuel de l'utilisateur authentifié.
 
     Returns:
         Un dictionnaire contenant un message de confirmation et les informations de l'utilisateur ajouté.
     """
-    add_user_to_db(id_api_users, name, lastname, login, password)
+    add_user_to_db(id_api_users, **user.dict())
     return {
         "message": "User added successfully",
-        "name": name,
-        "lastname": lastname,
-        "login": login,
-        "password": password,
+        **user.dict(),
     }
 
+
+# @api.put("/users/{id_api_users}")
+# def update_user(
+#     id_api_users: int,
+#     name: str,
+#     lastname: str,
+#     login: str,
+#     password: str,
+#     username: str = Depends(get_current_username),
+# ):
+#     """
+#     Met à jour les informations d'un utilisateur dans la base de données avec les informations fournies dans la requête.
+#     Args:
+#         id_api_users (int): L'ID de l'utilisateur à mettre à jour dans la base de données.
+#         name (str): Le nouveau nom de l'utilisateur à mettre à jour dans la base de données.
+#         lastname (str): Le nouveau nom de famille de l'utilisateur à mettre à jour dans la base de données.
+#         login (str): Le nouveau nom d'utilisateur de l'utilisateur à mettre à jour dans la base de données.
+#         password (str): Le nouveau mot de passe de l'utilisateur à mettre à jour dans la base de données.
+#         username (str): Le nom d'utilisateur actuel de l'utilisateur authentifié.
+
+#     Returns:
+#         Un dictionnaire contenant un message de confirmation et les informations de l'utilisateur mis à jour.
+#     """
+#     update_user_db(id_api_users, name, lastname, login, password)
+#     return {
+#         "message": "User updated successfully",
+#         "name": name,
+#         "lastname": lastname,
+#         "login": login,
+#         "password": password,
+#     }
 
 @api.put("/users/{id_api_users}")
 def update_user(
     id_api_users: int,
-    name: str,
-    lastname: str,
-    login: str,
-    password: str,
+    user: UserBase,
     username: str = Depends(get_current_username),
 ):
     """
     Met à jour les informations d'un utilisateur dans la base de données avec les informations fournies dans la requête.
     Args:
         id_api_users (int): L'ID de l'utilisateur à mettre à jour dans la base de données.
-        name (str): Le nouveau nom de l'utilisateur à mettre à jour dans la base de données.
-        lastname (str): Le nouveau nom de famille de l'utilisateur à mettre à jour dans la base de données.
-        login (str): Le nouveau nom d'utilisateur de l'utilisateur à mettre à jour dans la base de données.
-        password (str): Le nouveau mot de passe de l'utilisateur à mettre à jour dans la base de données.
+        user (UserBase): Les nouvelles informations de l'utilisateur à mettre à jour dans la base de données.
         username (str): Le nom d'utilisateur actuel de l'utilisateur authentifié.
 
     Returns:
         Un dictionnaire contenant un message de confirmation et les informations de l'utilisateur mis à jour.
     """
-    update_user_db(id_api_users, name, lastname, login, password)
+    update_user_db(id_api_users, **user.dict())
     return {
         "message": "User updated successfully",
-        "name": name,
-        "lastname": lastname,
-        "login": login,
-        "password": password,
+        **user.dict(),
     }
-
 
 @api.delete("/users/{id_api_users}")
 def delete_user(id_api_users: int, username: str = Depends(get_current_username)):

@@ -3,9 +3,11 @@ import mysql.connector
 from datetime import timedelta, datetime
 
 import pandas as pd
+import numpy as np 
 from fastapi import FastAPI
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import joblib
 
 import pickle
 import warnings
@@ -181,7 +183,7 @@ def update_user_db(
 def delete_user_db(id_api_users: int):
     # Prepare a DELETE query to remove the existing user from the api_users table
     query = "DELETE FROM api_users WHERE id_api_users = %s"
-    values = (id_api_users)
+    values = (id_api_users,)
 
     cursor.execute(query, values)
     cnx.commit()
@@ -244,5 +246,47 @@ def get_price_history_from_db(
     return prices_data
 
 
-def calculate_moving_average(data: pd.DataFrame, window: int):
-    return data["close_price"].rolling(window=window).mean()
+
+
+
+def train_model(X_train, y_train):
+    """
+    Entraîne un modèle de prédiction de prix de clôture en utilisant RandomForestRegressor.
+
+    Args:
+        X_train (pd.DataFrame): Les caractéristiques d'entraînement.
+        y_train (pd.Series): Les étiquettes d'entraînement.
+
+    Retourne:
+        Un dictionnaire contenant les métriques de performance suivantes pour le modèle entraîné :
+        - mean_absolute_error (float): L'erreur absolue moyenne entre les prédictions du modèle et les valeurs réelles.
+        - mean_squared_error (float): L'erreur quadratique moyenne entre les prédictions du modèle et les valeurs réelles.
+        - root_mean_squared_error (float): La racine carrée de l'erreur quadratique moyenne.
+        - r2_score (float): Le coefficient de détermination R², qui mesure la proportion de la variance expliquée par le modèle.
+    """
+    # Instancier le modèle avec des hyperparamètres arbitraires
+    model = RandomForestRegressor(max_depth=None, min_samples_leaf= 2, min_samples_split=2, n_estimators=50)
+
+    # Entraîner le modèle sur les données d'entraînement
+    model.fit(feats, target)
+
+    # Calculer les prédictions sur les données d'entraînement
+    y_train_pred = model.predict(feats)
+
+    # Calculer les métriques de performance
+    mae = mean_absolute_error(target, y_train_pred)
+    mse = mean_squared_error(target, y_train_pred)
+    rmse = np.sqrt(mse)
+    r2 = r2_score(target, y_train_pred)
+
+    # Get the current date and time
+    now = datetime.now()
+    date_time = now.strftime("%Y-%m-%d_%H-%M-%S")
+
+    # Define the file name with the current date and time
+    file_name = f"../model/rf_regressor_{date_time}.pkl"
+
+    # Save the model using the file name with the current date and time
+    joblib.dump(model, file_name)
+    # Retourner les métriques de performance du modèle entraîné
+    return {"mean_absolute_error": mae, "mean_squared_error": mse, "root_mean_squared_error": rmse, "r2_score": r2}
