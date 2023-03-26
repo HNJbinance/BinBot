@@ -1,0 +1,37 @@
+version: '3'  
+  
+services:  
+  db:  
+    build: ./1 - Database  
+    environment:  
+      MYSQL_DATABASE: opa  
+      MYSQL_ROOT_PASSWORD: temp123
+    ports:  
+      - "3306:3306"
+    network_mode: "host" 
+  
+  datascripts:  
+    build: ./2 - BinanceDataScripts  
+    depends_on:  
+      - db  
+    ports:
+     - "9443:9443"  
+     - "443:443"  
+    environment:  
+      MYSQL_HOST: db  
+      MYSQL_DATABASE: opa
+      MYSQL_PASSWORD: temp123
+    network_mode: "host" 
+  
+  api:  
+    build: ./3 - TrainData  
+    depends_on:  
+      - db  
+      - datascripts  
+    ports:
+     - "8000:8000" 
+    environment:  
+      MYSQL_HOST: db  
+      MYSQL_DATABASE: opa
+      MYSQL_PASSWORD: temp123
+    network_mode: "host" 

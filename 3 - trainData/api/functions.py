@@ -9,7 +9,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 import pickle
 import warnings
-
+import os
 warnings.filterwarnings("ignore")
 from pydantic import BaseModel
 
@@ -23,12 +23,12 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 api = FastAPI()
 security = HTTPBasic()
 cnx = mysql.connector.connect(
-    user="root", password="temp123", host="172.17.0.2", port="3306", database="opa"
+    user="root", password=os.environ.get("MYSQL_PASSWORD"), host=os.environ.get('MYSQL_ADDRESS'), port="3306", database="opa"
 )
 cursor = cnx.cursor()
 
 # df = pd.read_csv("../model/data.csv")
-model = pickle.load(open("../model/best_model.pkl", "rb"))
+model = pickle.load(open("/trainapi/model/best_model.pkl", "rb"))
 
 ##############################################################################################################
 #                                Constantes

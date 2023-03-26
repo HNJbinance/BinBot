@@ -2,7 +2,7 @@ import logging
 from termcolor import colored
 import modules.sql_properties as sql 
 # from binance.lib.utils import config_logging
-from binance import ThreadedWebsocketManager
+from binance  import ThreadedWebsocketManager
 import json
 
 from os import getpid

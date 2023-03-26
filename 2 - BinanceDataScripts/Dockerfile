@@ -1,0 +1,28 @@
+# Use the official Python image as the base image  
+FROM python:latest 
+
+ENV MYSQL_USER='root'  
+ENV MYSQL_PASSWORD='temp123'  
+ENV MYSQL_ADDRESS=localhost  
+ENV MYSQL_PORT='3306'  
+ENV MYSQL_DATABASE='opa'  
+
+RUN apt-get update && apt-get -y install cron
+# Set the working directory to /app  
+WORKDIR /scripts
+  
+# Copy the requirements file into the container  
+COPY scripts .  
+  
+# Install the requirements  
+RUN  pip3 install -r requirements.txt --no-cache-dir
+
+COPY scripts/mycron /etc/cron.d/mycron  
+# Set the file permissions on the cron job file  
+RUN chmod 0644 mycron  
+RUN crontab mycron
+RUN touch /var/log/cron.log 
+RUN chmod 0666 /var/log/cron.log  
+  
+# Start the cron service  
+CMD cron && tail -f /var/log/cron.log  
