@@ -6,8 +6,8 @@ import os
 class SqlAction:
     conn = mysql.connector.connect(
                 user ='root',
-                passwd ='temp123',
-                host ='localhost',
+                passwd =os.environ.get("MYSQL_PASSWORD"),
+                host =os.environ.get("MYSQL_HOST"),
                 port ="3306",
                 database ="opa"
             )  

@@ -26,23 +26,6 @@ cnx = mysql.connector.connect(
     user="root", password=os.environ.get("MYSQL_PASSWORD"), host=os.environ.get('MYSQL_ADDRESS'), port="3306", database="opa"
 )
 cursor = cnx.cursor()
-
-@api.get('/healthcheck')  
-def healthcheck():  
-    try:  
-        cnx = mysql.connector.connect(user='root', password='password', host='db', database='mydb')  
-        cursor = cnx.cursor()  
-        cursor.execute('SELECT COUNT(*) FROM historical_klines')  
-        result1 = cursor.fetchone() 
-        cursor.execute('SELECT COUNT(*) FROM stream_klines')
-        result2 = cursor.fetchone()
-
-        if result1[0] > 0 and result2[0] > 0:  
-            return {'status': 'ok'}  
-        else:  
-            return {'status': 'error', 'message': 'No data found'}  
-    except mysql.connector.Error as err:  
-        return {'status': 'error', 'message': str(err)} 
 # df = pd.read_csv("../model/data.csv")
 model = pickle.load(open("/trainapi/model/best_model.pkl", "rb"))
 

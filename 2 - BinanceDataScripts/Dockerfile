@@ -3,7 +3,7 @@ FROM python:latest
 
 ENV MYSQL_USER='root'  
 ENV MYSQL_PASSWORD='temp123'  
-ENV MYSQL_ADDRESS=localhost  
+ENV MYSQL_HOST=localhost  
 ENV MYSQL_PORT='3306'  
 ENV MYSQL_DATABASE='opa'  
 
