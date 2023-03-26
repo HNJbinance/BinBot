@@ -6,6 +6,20 @@ from functions import *
 
 client = TestClient(api)
 
+@pytest.fixture(scope="module")
+def db_connection():
+    connection = mysql.connector.connect(
+        user="root",
+        password="temp123",
+        host="172.17.0.2",
+        port="3306", 
+        database="opa",
+    )
+   
+    yield connection
+
+    connection.close()
+
 
 def test_add_user():
     
@@ -29,7 +43,7 @@ def test_add_user():
         "login": "johndoe",
         "password": "password123",
     }
-    cnx.close()
+    
 
 
 
@@ -53,7 +67,7 @@ def test_update_user():
         "login": "johnsmith",
         "password": "password123",
     }
-    cnx.close()
+    
 
 
 
@@ -61,7 +75,7 @@ def test_delete_user():
     response = client.delete("/users/1000", auth=("hennaji", "temp123"))
     assert response.status_code == 200, f"Unexpected response: {response.json()}"
     assert response.json() == {"message": "User deleted successfully"}
-    cnx.close()
+    
 
 
 
