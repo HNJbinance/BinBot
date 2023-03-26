@@ -18,11 +18,14 @@ COPY scripts .
 RUN  pip3 install -r requirements.txt --no-cache-dir
 
 COPY scripts/mycron /etc/cron.d/mycron  
+RUN pip install uvicorn
+
+ENV PATH="/root/.local/bin:${PATH}"  
 # Set the file permissions on the cron job file  
 RUN chmod 0644 mycron  
 RUN crontab mycron
 RUN touch /var/log/cron.log 
 RUN chmod 0666 /var/log/cron.log  
-  
+EXPOSE 9000  
 # Start the cron service  
-CMD cron && tail -f /var/log/cron.log  
+CMD ["bash", "-c", "python3 get_historical_data.py & python3 get_stream_data.py & cron && uvicorn healthcheck:app --host 0.0.0.0 --port 9000"]  

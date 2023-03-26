@@ -1,3 +1,4 @@
+import time
 import mysql.connector
 
 from datetime import timedelta, datetime
@@ -22,27 +23,28 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 ##############################################################################################################
 api = FastAPI()
 security = HTTPBasic()
-cnx = mysql.connector.connect(
-    user="root", password=os.environ.get("MYSQL_PASSWORD"), host=os.environ.get('MYSQL_ADDRESS'), port="3306", database="opa"
-)
-cursor = cnx.cursor()
+  
+def connect_to_mysql():  
+    cnx = mysql.connector.connect(  
+        user="root", password=os.environ.get("MYSQL_PASSWORD"), host=os.environ.get('MYSQL_ADDRESS'), port="3306", database="opa"  
+    )  
+    return cnx  
+  
+def retry_connect_to_mysql(retries=5):  
+    attempts = 0  
+    while attempts < retries:  
+        try:  
+            cnx = connect_to_mysql()  
+            cursor = cnx.cursor()  
+            return cursor  
+        except mysql.connector.Error as err:  
+            print(f"Error connecting to MySQL: {err}")  
+            attempts += 1  
+            time.sleep(2**attempts) # exponential backoff  
+    raise Exception("Could not connect to MySQL after multiple attempts")  
 
-@api.get('/healthcheck')  
-def healthcheck():  
-    try:  
-        cnx = mysql.connector.connect(user='root', password='password', host='db', database='mydb')  
-        cursor = cnx.cursor()  
-        cursor.execute('SELECT COUNT(*) FROM historical_klines')  
-        result1 = cursor.fetchone() 
-        cursor.execute('SELECT COUNT(*) FROM stream_klines')
-        result2 = cursor.fetchone()
+cursor = retry_connect_to_mysql()
 
-        if result1[0] > 0 and result2[0] > 0:  
-            return {'status': 'ok'}  
-        else:  
-            return {'status': 'error', 'message': 'No data found'}  
-    except mysql.connector.Error as err:  
-        return {'status': 'error', 'message': str(err)} 
 # df = pd.read_csv("../model/data.csv")
 model = pickle.load(open("/trainapi/model/best_model.pkl", "rb"))
 
@@ -67,33 +69,41 @@ lag_count = 6
 ##############################################################################################################
 #                                functions for data handling
 ##############################################################################################################
-def retrieve_hklines_db():
-    query1 = "SELECT * FROM historical_klines"
-    cursor.execute(query1)
-    # Load the data into a Pandas DataFrame
-    df = pd.DataFrame(
-        cursor.fetchall(),
-        columns=[
-            "id_symint",
-            "open_time",
-            "open_price",
-            "high_price",
-            "low_price",
-            "close_price",
-            "volume",
-            "close_time",
-            "quote_asset_volume",
-            "number_of_trades",
-            "taker_buy_base_asset_volume",
-            "taker_buy_quote_asset_volume",
-        ],
-    )
-    df["close_time"] = pd.to_datetime(df["close_time"], unit="ms")
-    df = df.set_index("close_time")
-    df.sort_index(inplace=True)
-    # Fill any missing values
-    df = df.ffill()
-    return df
+def retrieve_hklines_db(retry_interval=1, max_retries=10):  
+    num_retries = 0  
+    while True:  
+        try:  
+            query1 = "SELECT * FROM historical_klines"  
+            cursor.execute(query1)  
+            # Load the data into a Pandas DataFrame  
+            df = pd.DataFrame(  
+                cursor.fetchall(),  
+                columns=[  
+                    "id_symint",  
+                    "open_time",  
+                    "open_price",  
+                    "high_price",  
+                    "low_price",  
+                    "close_price",  
+                    "volume",  
+                    "close_time",  
+                    "quote_asset_volume",  
+                    "number_of_trades",  
+                    "taker_buy_base_asset_volume",  
+                    "taker_buy_quote_asset_volume",  
+                ],  
+            )  
+            df["close_time"] = pd.to_datetime(df["close_time"], unit="ms")  
+            df = df.set_index("close_time")  
+            df.sort_index(inplace=True)  
+            # Fill any missing values  
+            df = df.ffill()  
+            return df  
+        except:  
+            num_retries += 1  
+            if num_retries >= max_retries:  
+                raise Exception("Failed to retrieve data from database after {} retries".format(max_retries))  
+            time.sleep(2**num_retries) 
 
 
 data = retrieve_hklines_db()
