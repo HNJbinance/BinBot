@@ -12,10 +12,10 @@ services:
       test: ["CMD-SHELL", "mysql --user=root --password=temp123 --execute='SELECT 1'"]  
       interval: 10s  
       timeout: 5s  
-      retries: 3  
-    networks:
-      - mynetwork
-  
+      retries: 3 
+      start_period: 10s 
+
+      
   datascripts:  
     build: ./2 - BinanceDataScripts  
     depends_on:  
@@ -23,9 +23,10 @@ services:
         condition: service_healthy
     healthcheck:  
       test: ["CMD-SHELL", "curl --fail -s http://localhost:9000/healthcheck"]  
-      interval: 10s  
-      timeout: 5s  
-      retries: 3  
+      interval: 20s  
+      timeout: 10s  
+      retries: 5 
+      start_period: 20s 
     ports:
      - "9443:9443"  
      - "443:443" 
@@ -34,9 +35,7 @@ services:
       MYSQL_HOST: db  
       MYSQL_DATABASE: opa
       MYSQL_PASSWORD: temp123
-    networks:
-      - mynetwork
-  
+
   api:  
     build: ./3 - trainData  
     depends_on: 
@@ -50,8 +49,3 @@ services:
       MYSQL_HOST: db  
       MYSQL_DATABASE: opa
       MYSQL_PASSWORD: temp123
-    networks:
-      - mynetwork
-networks:  
-  mynetwork:  
-    driver: bridge 

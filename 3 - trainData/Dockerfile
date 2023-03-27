@@ -1,9 +1,6 @@
 # Utiliser une image Python de base  
 FROM python:latest
 
-ENV MYSQL_PASSWORD='temp123'  
-ENV MYSQL_ADDRESS=localhost  
-
 
 WORKDIR /trainapi 
 # Copier les fichiers de code source dans le conteneur  

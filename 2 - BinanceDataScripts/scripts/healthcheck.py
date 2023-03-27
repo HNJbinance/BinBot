@@ -1,12 +1,13 @@
 import mysql.connector  
-from fastapi import FastAPI  
+from fastapi import FastAPI, HTTPException  
+from fastapi.responses import JSONResponse  
   
 app = FastAPI()  
   
 @app.get('/healthcheck')  
 def healthcheck():  
     try:  
-        cnx = mysql.connector.connect(user='root', password='temp123', host='localhost', database='opa')  
+        cnx = mysql.connector.connect(user='root', password='temp123', host=os.environ.get("MYSQL_HOST"), database='opa')  
         cursor = cnx.cursor()  
         cursor.execute('SELECT COUNT(*) FROM historical_klines')  
         result1 = cursor.fetchone()  
@@ -16,6 +17,6 @@ def healthcheck():
         if result1[0] > 0 and result2[0] > 0:  
             return {'status': 'ok'}  
         else:  
-            return {'status': 'error', 'message': 'No data found'}  
+            raise HTTPException(status_code=400, detail='No data found')  
     except mysql.connector.Error as err:  
-        return {'status': 'error', 'message': str(err)}  
+        return JSONResponse(content={'status': 'error', 'message': str(err)}, status_code=400)  
