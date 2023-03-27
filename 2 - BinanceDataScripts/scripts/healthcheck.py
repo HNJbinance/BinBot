@@ -17,6 +17,6 @@ def healthcheck():
         if result1[0] > 0 and result2[0] > 0:  
             return {'status': 'ok'}  
         else:  
-            raise HTTPException(status_code=400, detail='No data found')  
+            raise HTTPException(status_code=400, detail='les données ne sont pas encore insérées !')  
     except mysql.connector.Error as err:  
         return JSONResponse(content={'status': 'error', 'message': str(err)}, status_code=400)  
