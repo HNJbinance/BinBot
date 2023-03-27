@@ -10,7 +10,7 @@ COPY scripts .
   
 # Install the requirements  
 RUN  pip3 install -r requirements.txt --no-cache-dir
-RUN sudo apt-get update && sudo apt-get -y install cron
+RUN apt-get update && apt-get -y install cron
 COPY scripts/mycron /etc/cron.d/mycron  
 RUN pip install uvicorn
 
@@ -24,5 +24,4 @@ EXPOSE 9000
 
 
 # Start the cron service  
-#CMD ["bash", "-c", "python3 get_historical_data.py >> /var/log/cron.log  2>&1 & python3 get_stream_data.py >> /var/log/cron.log  2>&1 & cron && uvicorn healthcheck:app --host 0.0.0.0 --port 9000"]  
-CMD ["bash", "-c", "python3 get_historical_data.py & python3 get_stream_data.py && uvicorn healthcheck:app --host 0.0.0.0 --port 9000"]  
+CMD ["bash", "-c", "uvicorn healthcheck:app --host 0.0.0.0 --port 9000 & cron & python3 get_historical_data.py && python3 get_stream_data.py "]  

@@ -1,13 +1,13 @@
 import mysql.connector  
 from fastapi import FastAPI, HTTPException  
 from fastapi.responses import JSONResponse  
-  
+import os
 app = FastAPI()  
   
 @app.get('/healthcheck')  
 def healthcheck():  
     try:  
-        cnx = mysql.connector.connect(user='root', password='temp123', host=os.environ.get("MYSQL_HOST"), database='opa')  
+        cnx = mysql.connector.connect(user='root', password=os.environ.get("MYSQL_PASSWORD"), host=os.environ.get("MYSQL_HOST"), database='opa')  
         cursor = cnx.cursor()  
         cursor.execute('SELECT COUNT(*) FROM historical_klines')  
         result1 = cursor.fetchone()  
