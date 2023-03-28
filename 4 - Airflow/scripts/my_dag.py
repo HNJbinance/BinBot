@@ -5,12 +5,15 @@ import os
 from airflow import DAG  
 from airflow.operators.python_operator import PythonOperator
 
-API_HOST = os.environ.get("API_HOST")
+api_host = os.getenv('API_HOST', 'localhost')  
+username = os.getenv('API_USERNAME','')  
+password = os.getenv('API_PASSWORD','')  
 def call_api_and_write_to_csv():  
     # Set up authentication credentials  
-    auth = requests.auth.HTTPBasicAuth('slebib', 'temp123') 
+    auth = requests.auth.HTTPBasicAuth(username, password) 
+    api_url = f"http://{api_host}:8000/predict"  
     # Make API request with authentication    
-    response = requests.get("http://api:8000/predict", auth=auth)     
+    response = requests.get(api_url, auth=auth)     
     if response.status_code != 200:  
         raise Exception("Failed to call API")  
     data = response.json()  
@@ -47,7 +50,7 @@ default_args = {
     'depends_on_past': False,  
     'start_date': datetime(2021, 8, 1),  
     'retries': 1,  
-    'retry_delay': timedelta(seconds=5)  
+    'retry_delay': timedelta(minutes=2)  
 }  
   
 dag = DAG(  
