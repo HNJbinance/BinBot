@@ -15,7 +15,7 @@ ENV PATH="/root/.local/bin:${PATH}"
 # Installer les dépendances du projet  
 RUN pip install -r requirements.txt  
   
-# Définir le répertoire de travail  
+# Définir le port de l'api
 
 EXPOSE 8000
 
