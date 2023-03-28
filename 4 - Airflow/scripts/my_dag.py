@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 import csv  
 import requests  
 import os 
+from airflow import DAG  
+from airflow.operators.python_operator import PythonOperator
 
 API_HOST = os.environ.get("API_HOST")
 def call_api_and_write_to_csv():  
@@ -39,5 +41,25 @@ def call_api_and_write_to_csv():
         ])
   
     print('API call successful')  
-
-call_api_and_write_to_csv()
+     
+default_args = {  
+    'owner': 'me',  
+    'depends_on_past': False,  
+    'start_date': datetime(2021, 8, 1),  
+    'retries': 1,  
+    'retry_delay': timedelta(seconds=5)  
+}  
+  
+dag = DAG(  
+    'my_dag',  
+    default_args=default_args,  
+    description='Call API every 5 minutes and write to CSV',  
+    schedule_interval=timedelta(minutes=5)  
+)  
+  
+task = PythonOperator(  
+    task_id='call_api_and_write_to_csv',  
+    python_callable=call_api_and_write_to_csv,  
+    dag=dag  
+)  
+task

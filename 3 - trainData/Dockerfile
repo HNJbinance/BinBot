@@ -4,7 +4,6 @@ FROM python:latest
 
 WORKDIR /trainapi 
 # Copier les fichiers de code source dans le conteneur  
-COPY ./airflow ./airflow 
 COPY ./api ./api 
 COPY ./model ./model 
 COPY ./requirements.txt . 
