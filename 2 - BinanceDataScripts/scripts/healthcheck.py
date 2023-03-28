@@ -20,3 +20,5 @@ def healthcheck():
             raise HTTPException(status_code=400, detail='les données ne sont pas encore insérées !')  
     except mysql.connector.Error as err:  
         return JSONResponse(content={'status': 'error', 'message': str(err)}, status_code=400)  
+
+#point d'extremité /helthcheck   et c'est un script de santé et de verification de l'etat des applications      
