@@ -1,0 +1,3 @@
+*/10 * * * * /usr/local/bin/python3 /scripts/purge_stream_data.py >> /var/log/cron.log  2>&1 
+*/2 * * * * /usr/local/bin/python3 /scripts/get_stream_data.py >> /var/log/cron.log  2>&1 
+*/2 * * * * /usr/local/bin/python3 /scripts/get_historical_data.py >> /var/log/cron.log  2>&1 
