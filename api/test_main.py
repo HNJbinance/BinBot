@@ -110,8 +110,8 @@ def test_get_model_performance():
     assert "r2_score" in performance_metrics
 
 
-# def test_retrain_model():
-#     response = client.post("/retrain_model", auth=("hennaji", "temp123"))
-#     assert response.status_code == 200
-#     result = response.json()
-#     assert result == {"message": "Le modèle a été réentraîné avec succès."}
+def test_retrain_model():
+    response = client.post("/retrain_model", auth=("hennaji", "temp123"))
+    assert response.status_code == 200
+    result = response.json()
+    assert result == {"message": "Le modèle a été réentraîné avec succès."}
