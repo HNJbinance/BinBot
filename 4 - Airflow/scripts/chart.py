@@ -18,17 +18,18 @@ def chart():
     ax.plot(df['Actual Time'], df['Predicted Close Price'], label='Predicted Close Price')  
     ax.set_xlabel('Actual Time')  
     ax.set_ylabel('Price')  
-    ax.set_title('Actual Price and Predicted Close Price Over Time')  
+    ax.set_title('la prediction du prix actuel')  
     ax.legend()  
+    #Actual Price and Predicted Close Price Over Time  
       
-      
-    # Convert the chart to a base64-encoded string  
+    # Convert the chart to a base64-encoded string  pour l'utiliser pour afficher dans une page html
     buffer = BytesIO()  
     plt.savefig(buffer, format='png')  
     buffer.seek(0)  
     image_string = base64.b64encode(buffer.getvalue()).decode()  
       
     # Create an HTML page that displays the chart  
+    #pour créer une page HTML qui affiche le graphique de dispersion
     page = f'''  
     <html>  
         <body>  
