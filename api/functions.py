@@ -30,7 +30,7 @@ cnx = mysql.connector.connect(
 cursor = cnx.cursor()
 
 # df = pd.read_csv("../model/data.csv")
-model = pickle.load(open("../model/best_model.pkl", "rb"))
+model = pickle.load(open("../model/rf_regressor.pkl", "rb"))
 
 ##############################################################################################################
 #                                Constantes
@@ -157,7 +157,7 @@ def add_user_to_db(
     cursor.execute(query, values)
     cnx.commit()
     # Close the database connection
-    cnx.close()
+    # cnx.close()
     # Print a message indicating that the user has been created
     print("User created successfully")
 
@@ -174,7 +174,7 @@ def update_user_db(
     cnx.commit()
 
     # Close the database connection
-    cnx.close()
+    # cnx.close()
 
     # Return a JSON response indicating that the user has been updated
     return {"message": "User updated successfully"}
@@ -189,7 +189,7 @@ def delete_user_db(id_api_users: int):
     cnx.commit()
 
     # Close the database connection
-    cnx.close()
+    # cnx.close()
 
     # Return a JSON response indicating that the user has been deleted
     return {"message": "User deleted successfully"}
@@ -284,9 +284,11 @@ def train_model(X_train, y_train):
     date_time = now.strftime("%Y-%m-%d_%H-%M-%S")
 
     # Define the file name with the current date and time
-    file_name = f"../model/rf_regressor_{date_time}.pkl"
-
+    file_name1 = f"../model/archive/rf_regressor_{date_time}.pkl"
+    file_name2 = f"../model/rf_regressor.pkl"
     # Save the model using the file name with the current date and time
-    joblib.dump(model, file_name)
+    joblib.dump(model, file_name1)
+    joblib.dump(model, file_name2)
+
     # Retourner les métriques de performance du modèle entraîné
     return {"mean_absolute_error": mae, "mean_squared_error": mse, "root_mean_squared_error": rmse, "r2_score": r2}

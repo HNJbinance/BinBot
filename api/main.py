@@ -64,7 +64,7 @@ def add_user(
         "message": "User added successfully",
         **user.dict(),
     }
-
+    
 
 # @api.put("/users/{id_api_users}")
 # def update_user(

@@ -24,7 +24,7 @@ def db_connection():
 def test_add_user():
     
     response = client.post(
-        "/add_user/1000",
+        "/add_user/1001",
         auth=("hennaji", "temp123"),
         json={
             "name": "John",
@@ -49,7 +49,7 @@ def test_add_user():
 
 def test_update_user():
     response = client.put(
-        "/users/1000",
+        "/users/1001",
         auth=("hennaji", "temp123"),
         json={
             "name": "John",
@@ -72,7 +72,7 @@ def test_update_user():
 
 
 def test_delete_user():
-    response = client.delete("/users/1000", auth=("hennaji", "temp123"))
+    response = client.delete("/users/1001", auth=("hennaji", "temp123"))
     assert response.status_code == 200, f"Unexpected response: {response.json()}"
     assert response.json() == {"message": "User deleted successfully"}
     
