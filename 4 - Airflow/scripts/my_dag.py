@@ -50,14 +50,14 @@ default_args = {
     'depends_on_past': False,  
     'start_date': datetime(2021, 8, 1),  
     'retries': 1,  
-    'retry_delay': timedelta(minutes=2)  
+    'retry_delay': timedelta(minutes=5)  
 }  
   
 dag = DAG(  
     'my_dag',  
     default_args=default_args,  
     description='Call API every 5 minutes and write to CSV',  
-    schedule_interval=timedelta(minutes=5)  
+    schedule_interval=timedelta(minutes=10)  
 )  
   
 task = PythonOperator(  

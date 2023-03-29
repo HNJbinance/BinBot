@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse
 import matplotlib.pyplot as plt  
 from io import BytesIO  
 import base64 
+import os
 # Read the CSV file into a DataFrame  
 
 # Create a FastAPI application  
@@ -11,6 +12,17 @@ app = FastAPI()
 # Define a route to display the chart  
 @app.get('/chart', response_class=HTMLResponse)  
 def chart(): 
+    file_exists = os.path.isfile('predictions.csv')
+    if not file_exists:
+        page = f'''  
+        <html>  
+            <body>  
+                <h1>Les données ne sont pas encore disponible, Il faut s'assurer que le dag est activé</h1> 
+            </body>  
+        </html>  
+        '''
+        return page
+
     df = pd.read_csv('predictions.csv')  
     # Plot a scatter chart of Predicted Close Price vs Actual Price  
     fig, ax = plt.subplots()  

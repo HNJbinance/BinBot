@@ -17,7 +17,7 @@ services:
 
       
   datascripts:  
-    build: ./2 - BinanceDataScripts  
+    build: ./2 - BinanceDataScripts   
     depends_on:  
       db:
         condition: service_healthy
