@@ -6,8 +6,9 @@ import pandas as pd
 
 class SqlAction:
     try : 
+        print("docker compose connection...")
         conn = mysql.connector.connect(
-                    print("docker compose connection...")
+                    
                     user ='datascientest',
                     passwd ='temp123',                
                     # host ='172.17.0.1',
