@@ -1,0 +1,61 @@
+version: '3.0'  
+  
+services:  
+  db:  
+    build: 
+     context: ./
+     dockerfile: setup.Dockerfile
+    environment: 
+      MYSQL_DATABASE : opa 
+      MYSQL_ROOT_PASSWORD: temp123
+    ports:  
+      - "3306:3306"
+    healthcheck:  
+      test: ["CMD-SHELL", "mysql --user=root --password=temp123 --execute='SELECT 1'"]  
+      interval: 10s  
+      timeout: 5s  
+      retries: 3 
+      start_period: 10s 
+      
+  datascripts:  
+    build: 
+     context: ./
+     dockerfile: scripts.Dockerfile 
+    depends_on:  
+      db:
+        condition: service_healthy
+    healthcheck:  
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:9000/healthcheck"]  
+      interval: 20s  
+      timeout: 10s  
+      retries: 5 
+      start_period: 20s 
+    ports:
+     - "9000:9000" 
+    environment:  
+      DB_HOST: db
+      DB_PORT: 3306  
+      MYSQL_DATABASE: opa
+      MYSQL_PASSWORD: temp123
+
+  api:  
+    build:
+     context: ./
+     dockerfile: api.Dockerfile 
+    depends_on: 
+      datascripts:
+       condition: service_healthy
+      db:
+       condition: service_healthy    
+    ports:
+     - "8000:8000" 
+    healthcheck:  
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/docs"]  
+      interval: 20s  
+      timeout: 10s  
+      retries: 5 
+      start_period: 5s 
+    environment:  
+      DB_HOST: db  
+      MYSQL_DATABASE: opa
+      MYSQL_PASSWORD: temp123
