@@ -117,7 +117,7 @@ class SqlAction:
                     data[f'{col}_lag-{lag}'] = data[col].shift(lag)
             data['next_close_price'] = data['close_price'].shift(-1)
             data = data.dropna()
-            feats = data.drop(['open_time','close_time','next_close_price','symbol', 'interval_symbol'], axis=1)
+            feats = data.drop(['open_time','close_time','next_close_price'], axis=1)
             target = data['next_close_price']
 
             return feats,target
