@@ -15,7 +15,7 @@ def healthcheck():
         result2 = cursor.fetchone()  
   
         if result1[0] > 0 and result2[0] > 0:  
-            return {'status': 'ok'}  
+            return {'status': 'ok', 'historical_count': result1[0],'stream_count':result2[0]   }  
         else:  
             raise HTTPException(status_code=400, detail='les données ne sont pas encore insérées !')  
     except mysql.connector.Error as err:  
