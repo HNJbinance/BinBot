@@ -21,8 +21,8 @@ import pickle
 sql = sql.SqlAction()
 feats , target =sql.retrieve_historical_klines_dataframe()
 
-feats.drop(columns=['close_price','id_symint'], inplace=True)
-feats.dropna(inplace=True)
+# feats.drop(columns=['close_price','id_symint'], inplace=True)
+# feats.dropna(inplace=True)
   
 
 ################################################################################################################
@@ -66,7 +66,7 @@ print("Best model score: ",  grid_search.best_score_)
 ################################################################################################################
 ################################## Métriques et enregistrement du modèle  ######################################
 
-pickle.dump(best_model,open('model_opt_rfc.pkl','wb'))
+pickle.dump(best_model,open('../models/model_opt_rfc.pkl','wb'))
 
 train_preds = best_model.predict(X_train)
 test_preds = best_model.predict(X_test)
