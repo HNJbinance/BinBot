@@ -85,18 +85,6 @@ class SqlAction:
             print("retrieve_historical_klines : unable to do action")
             raise
 
-
-    def retrieve_last_open_time(self) :
-        try : 
-            query = "select max(open_time) open_time  from opa.historical_klines "
-            self.curr.execute(query)
-            data = self.curr.fetchall()
-            # print(data)
-            return data
-        except :
-            print("retrieve_last_open_time : unable to do action")
-            raise
-
     def retrieve_historical_klines_dataframe(self) :
         try : 
             query = "select *  from opa.historical_klines order by open_time asc limit 90"
@@ -183,5 +171,5 @@ class SqlAction:
             print(data)
             return data
         except :
-            print("retrieve_stream_price_and_next_hour : unable to do action")
+            print("retrieve_stream_price : unable to do action")
             raise

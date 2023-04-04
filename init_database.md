@@ -26,15 +26,30 @@ mysql -u root -ptemp123
 # then exit
 exit
 
+########################################
+# reinstall OpenSSl
+########################################
+sudo rm -rf /usr/lib/python3/dist-packages/OpenSSL
+sudo pip3 install pyopenssl
+sudo pip3 install pyopenssl --upgrade
 
 ########################################
-# install python requirements contrab & init
+# install python requirements
 ########################################
 cd setup
-chmod 755 *
 pip install -r requirements.txt 
+
+########################################
+# init crontab
+########################################
+chmod 755 *
 ./init_crontab.sh
-pkill -f get_stream_data.py
-python3 get_stream_data.py </dev/null &>/dev/null &
-pkill -f get_historical_data.py
-python3 get_historical_data.py  </dev/null &>/dev/null &
+
+########################################
+# Launch stream and historical script 
+########################################
+# Come back to BinBot/ then launch start.sh
+cd ..
+chmod 755 *.sh
+./start.sh
+
