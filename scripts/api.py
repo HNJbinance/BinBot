@@ -1,18 +1,31 @@
-from functions import *
+
 import pickle
 
 import modules.sql_properties as sql
 import pandas as pd
 import numpy as np
 from fastapi import FastAPI
-
+from datetime import datetime
 
 api = FastAPI()
 sql = sql.SqlAction()
 
-close_price_stream = sql.retrieve_stream_price()
-data = sql.retrieve_historical_klines()
-model = pickle.load(open("./rf_regressor.pkl", "rb"))
+close_price_stream = sql.retrieve_stream_price_and_next_hour()[0]["close_price"]
+next_hour = sql.retrieve_stream_price_and_next_hour()[0]["next_hour"]
+
+# # Conversion de la chaîne de caractères en objet datetime
+# date_obj = datetime.strptime(next_hour, '%Y-%m-%d %H:%M:%S')
+
+# # Conversion de l'objet datetime en nombre flottant
+# date_float = float(date_obj.timestamp())
+
+feats, _ = sql.retrieve_historical_klines_dataframe()
+feats.drop(columns=['symbol', 'interval_symbol'], inplace=True)
+
+next_hour_data = feats.iloc[-1:]
+
+
+model = pickle.load(open("./model_opt_rfc.pkl", "rb"))
 
 
 def decision(actual_close_price: float, predict_close_price: float):
@@ -39,21 +52,21 @@ def predict_close_price():
         - predicted_close_price (float): Le prix de clôture prédit pour la prochaine heure, arrondi à 2 décimales.
         - decision (str): La décision recommandée basée sur la prédiction ("buy", "sell" ou "hold").
     """
-    global data
+    global next_hour
     global feats
     global close_price_stream
 
     # Predict the close price for the next hour
-    next_hour = data.index[-1] + timedelta(hours=1)
-    next_hour_data = feats.iloc[-1:]
-    next_hour_close_price = model.predict(next_hour_data)[0]
+    # next_hour = data.index[-1] + timedelta(hours=1)
+    # next_hour_data = feats.iloc[-1:]
+    next_hour_close_price = model.predict(next_hour_data)
     actual_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return {
         "symbol": "BTC/USDT",
         "interval": "1h",
         "actual_time": actual_time,
         "actual_price": close_price_stream,
-        "next_hour": next_hour.strftime("%Y-%m-%d %H:%M:%S"),
-        "predicted_close_price": round(next_hour_close_price, 2),
+        "next_hour": next_hour,
+        "predicted_close_price": next_hour_close_price,
         "decision": decision(close_price_stream, next_hour_close_price),
     }
