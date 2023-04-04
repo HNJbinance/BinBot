@@ -10,7 +10,7 @@ from datetime import datetime
 #############################################################################################
 #                                          init
 #############################################################################################
-api = FastAPI()
+app = FastAPI()
 sql = sql.SqlAction()
 
 #############################################################################################
@@ -38,7 +38,7 @@ def decision(actual_close_price: float, predict_close_price: float):
 #                                          endpoint
 #############################################################################################
 
-@api.get("/predict")
+@app.get("/predict")
 def predict_close_price():
     """
     Prédit le prix de clôture pour la prochaine heure en utilisant le modèle entraîné RandomForestRegressor.

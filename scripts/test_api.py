@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
-from api import api
+from scripts.api import app
 
-client = TestClient(api)
+client = TestClient(app)
 
 def test_predict_close_price():
     response = client.get("/predict")
