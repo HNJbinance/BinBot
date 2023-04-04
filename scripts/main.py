@@ -3,6 +3,7 @@ import modules.sql_properties as sql
 import pandas as pd
 import numpy as np
 from fastapi import FastAPI
+
 from datetime import datetime
 
 #############################################################################################
