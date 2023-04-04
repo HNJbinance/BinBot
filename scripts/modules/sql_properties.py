@@ -88,7 +88,7 @@ class SqlAction:
 
     def retrieve_last_open_time(self) :
         try : 
-            query = "select max(open_time) open_time  from opa.historical_klines "
+            query = "select ifnull(max(open_time),0) open_time  from opa.historical_klines "
             self.curr.execute(query)
             data = self.curr.fetchall()
             # print(data)
