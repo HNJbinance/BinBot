@@ -1,6 +1,4 @@
-
 import pickle
-
 import modules.sql_properties as sql
 import pandas as pd
 import numpy as np
