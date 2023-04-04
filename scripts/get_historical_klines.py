@@ -23,7 +23,7 @@ def main():
     client = Spot(timeout=2)
     sql = sql.SqlAction()
     max_open_time = sql.retrieve_last_open_time()[0]['open_time']
-    if max_open_time is None:
+    if max_open_time is None or max_open_time==0 :
         max_open_time = 1
     print(max_open_time)
     # variables   
