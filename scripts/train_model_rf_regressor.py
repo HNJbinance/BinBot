@@ -20,6 +20,9 @@ import pickle
 
 sql = sql.SqlAction()
 feats , target =sql.retrieve_historical_klines_dataframe()
+
+feats.drop(columns=['close_price','id_symint'], inplace=True)
+feats.dropna(inplace=True)
   
 
 ################################################################################################################
