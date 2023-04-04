@@ -57,5 +57,6 @@ services:
       start_period: 5s 
     environment:  
       DB_HOST: db  
+      DB_PORT: 3306
       MYSQL_DATABASE: opa
       MYSQL_PASSWORD: temp123

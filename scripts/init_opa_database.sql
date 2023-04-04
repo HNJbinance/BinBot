@@ -26,7 +26,6 @@ drop table
 if exists historical_klines ;
 drop table
 if exists stream_klines ;
-drop table
 -- -------------------------------------------------------------------
 drop table
 if exists historical_klines ;

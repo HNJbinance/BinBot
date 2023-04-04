@@ -1,2 +1,2 @@
-*/2 * * * * /usr/local/bin/python3 /scripts/get_stream_klines.py >> /var/log/cron.log  2>&1 
-*/2 * * * * /usr/local/bin/python3 /scripts/get_historical_klines.py >> /var/log/cron.log  2>&1 
+*/30 * * * * /usr/local/bin/python3 /scripts/get_stream_klines.py >> /var/log/cron.log  2>&1 
+*/30 * * * * /usr/local/bin/python3 /scripts/get_historical_klines.py >> /var/log/cron.log  2>&1 

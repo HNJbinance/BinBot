@@ -6,10 +6,10 @@ FROM python:latest
 WORKDIR /scripts
   
 # Copier tous les fichiers de la machine locale vers le working directory ou on travail celui du conteneur  
-COPY ../scripts .  
+COPY ./scripts .  
   
 # Install the requirements  
-RUN  pip3 install -r requirement.txt --no-cache-dir
+RUN  pip install -r requirement.txt --no-cache-dir
 #mise à jour du  gestionnaire de paquets APT et installation du Cron
 RUN apt-get update && apt-get -y install cron
 #copier mycron dans le repeertoire du conteneur

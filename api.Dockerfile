@@ -3,8 +3,8 @@ FROM python:latest
 
 WORKDIR /trainapi 
 # Copier les fichiers de code source dans le conteneur  
-COPY ../api ./api 
-COPY ../model ./model 
+COPY ./scripts ./scripts 
+COPY ./models ./models 
 COPY ./requirements.txt . 
 
 RUN pip install uvicorn
@@ -20,6 +20,6 @@ EXPOSE 8000
 #pour garder/persister le model .pkl au cas ou le container s'arrête.
 #VOLUME /modelData  
 
-WORKDIR /trainapi/api
+WORKDIR /trainapi/scripts
 # Exécuter le script Python  
-CMD ["uvicorn", "main:api", "--host", "0.0.0.0", "--port", "8000"]  
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]  
