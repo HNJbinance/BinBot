@@ -161,11 +161,9 @@ class SqlAction:
             print("store_stream_klines : unable to do action")
             raise
 
-    def retrieve_stream_price_and_next_hour(self) :
+    def retrieve_stream_price(self) :
         try : 
-            query = "select    close_price ,    date_format( date_add(from_unixtime( \
-                substring( event_time, 1 , char_length( event_time) - 3) \
-                ) ,interval 1 hour) , "%Y-%m-%d %H:00:00") next_hour from opa.stream_klines"
+            query = "select close_price opa.stream_klines"
             self.curr.execute(query)
             data = self.curr.fetchall()
             print(data)
