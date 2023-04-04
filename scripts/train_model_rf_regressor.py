@@ -20,7 +20,7 @@ import pickle
 
 sql = sql.SqlAction()
 feats , target =sql.retrieve_historical_klines_dataframe()
-feats.drop(columns=['symbol', 'interval_symbol'], inplace=True)
+  
 
 ################################################################################################################
 ################################### Préparation des données pour l'entrainement ################################
@@ -39,6 +39,16 @@ param_grid = {
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4]
 }
+
+# param_grid = {
+#         'n_estimators': [10, 50, 100, 200, 300, 400, 500],
+#         'max_depth': [None] + list(np.arange(2, 20, 1)),
+#         'min_samples_split': np.arange(2, 20, 1),
+#         'min_samples_leaf': np.arange(1, 20, 1),
+#         'max_features': ['auto', 'sqrt', 'log2', None] + list(np.arange(0.1, 1.1, 0.1)),
+#         'bootstrap': [True, False],
+#         'warm_start': [True, False],
+#         'criterion': ['mse', 'mae']}
 
 rf_model = RandomForestRegressor(random_state=42)
 grid_search = GridSearchCV(estimator=rf_model, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error', verbose=2, n_jobs=-1)
