@@ -7,26 +7,25 @@ import numpy as np
 from fastapi import FastAPI
 from datetime import datetime
 
+#############################################################################################
+#                                          init
+#############################################################################################
 api = FastAPI()
 sql = sql.SqlAction()
 
+#############################################################################################
+#                                          data
+#############################################################################################
+
 close_price_stream = sql.retrieve_stream_price_and_next_hour()[0]["close_price"]
 next_hour = sql.retrieve_stream_price_and_next_hour()[0]["next_hour"]
-
-# # Conversion de la chaîne de caractères en objet datetime
-# date_obj = datetime.strptime(next_hour, '%Y-%m-%d %H:%M:%S')
-
-# # Conversion de l'objet datetime en nombre flottant
-# date_float = float(date_obj.timestamp())
-
 feats, _ = sql.retrieve_historical_klines_dataframe()
-# feats.drop(columns=['symbol', 'interval_symbol'], inplace=True)
-
 next_hour_data = feats.iloc[-1:]
-
-
 model = pickle.load(open("../models/model_opt_rfc.pkl", "rb"))
 
+#############################################################################################
+#                                          functions
+#############################################################################################
 
 def decision(actual_close_price: float, predict_close_price: float):
     if actual_close_price > predict_close_price:
@@ -35,7 +34,9 @@ def decision(actual_close_price: float, predict_close_price: float):
         return "buy"
     else:
         return "hold"
-
+#############################################################################################
+#                                          endpoint
+#############################################################################################
 
 @api.get("/predict")
 def predict_close_price():
