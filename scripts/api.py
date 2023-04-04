@@ -20,12 +20,12 @@ next_hour = sql.retrieve_stream_price_and_next_hour()[0]["next_hour"]
 # date_float = float(date_obj.timestamp())
 
 feats, _ = sql.retrieve_historical_klines_dataframe()
-feats.drop(columns=['symbol', 'interval_symbol'], inplace=True)
+# feats.drop(columns=['symbol', 'interval_symbol'], inplace=True)
 
 next_hour_data = feats.iloc[-1:]
 
 
-model = pickle.load(open("./model_opt_rfc.pkl", "rb"))
+model = pickle.load(open("../models/model_opt_rfc.pkl", "rb"))
 
 
 def decision(actual_close_price: float, predict_close_price: float):
@@ -57,16 +57,16 @@ def predict_close_price():
     global close_price_stream
 
     # Predict the close price for the next hour
-    # next_hour = data.index[-1] + timedelta(hours=1)
-    # next_hour_data = feats.iloc[-1:]
+    next_hour_data = feats.iloc[-1:]
     next_hour_close_price = model.predict(next_hour_data)
     actual_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     return {
         "symbol": "BTC/USDT",
         "interval": "1h",
         "actual_time": actual_time,
         "actual_price": close_price_stream,
         "next_hour": next_hour,
-        "predicted_close_price": next_hour_close_price,
+        "predicted_close_price": round(next_hour_close_price.item(), 2),
         "decision": decision(close_price_stream, next_hour_close_price),
     }
