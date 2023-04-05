@@ -32,7 +32,7 @@ Docker Compose
 sudo apt update && sudo apt upgrade
 sudo apt install python3-pip
 ```
-#####2. Vérifiez et installez Git :
+2. Vérifiez et installez Git :
 
 ```bash
 git --version
