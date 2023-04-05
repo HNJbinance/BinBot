@@ -23,6 +23,8 @@ def main():
     client = Spot(timeout=2)
     sql = sql.SqlAction()
     max_open_time = sql.retrieve_last_open_time()[0]['open_time']
+    if max_open_time is None or max_open_time==0 :
+        max_open_time = 1
     print(max_open_time)
     # variables   
     api_starttime = 0
@@ -33,11 +35,10 @@ def main():
     db_symbol = 'BTCUSDT'
     db_interval = '1h'
 
-
     api_endtime = max_open_time
     print('get_historical_date : db_symbol:{}, db_interval:{}'.format(db_symbol,db_interval))
 
-    while ( api_starttime < api_endtime and i < max_loop ) : 
+    while (api_starttime < api_endtime and i < max_loop ) : 
         # get historical data of symbol/interval requested from binance REST API
         klines_data =  client.klines(symbol=db_symbol, interval=db_interval,startTime=api_endtime-1,limit=1000)
         # Remove last index of each list (// Unused field. Ignore.)
