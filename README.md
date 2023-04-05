@@ -59,8 +59,6 @@ docker-compose up
 ```bash
 http://localhost:8000/docs
 ```
-#####Cette adresse vous permettra d'accéder à la documentation Swagger de l'API et de tester ses différentes fonctionnalités.
-
 #####7. Pour supprimer les conteneurs précédemment créés :
 
 ```bash
