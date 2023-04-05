@@ -26,40 +26,42 @@ Docker Compose
 
 ### Étapes d'installation
 
-1. Assurez-vous que votre système est à jour en exécutant les commandes suivantes :
+#####1. Assurez-vous que votre système est à jour en exécutant les commandes suivantes :
 
 ```bash
 sudo apt update && sudo apt upgrade
 sudo apt install python3-pip
 ```
-2. Vérifiez et installez Git :
+#####2. Vérifiez et installez Git :
 
 ```bash
 git --version
 sudo apt install git
 ```
-3. Clonez le dépôt Git :
+#####3. Clonez le dépôt Git :
 
 ```bash
 git clone https://github.com/HNJbinance/BinBot.git
 cd BinBot
 ```
-4. Construisez l'image Docker de votre application :
+#####4. Construisez l'image Docker de votre application :
 
 ```bash
 gdocker-compose build
 ```
-5. Démarrez les conteneurs de votre application :
+#####5. Démarrez les conteneurs de votre application :
 
 ```bash
 docker-compose up
 ```
-6. Accédez à l'API via votre navigateur en allant à l'adresse suivante :
+#####6. Accédez à l'API via votre navigateur en allant à l'adresse suivante :
 
 ```bash
 http://localhost:8000/docs
 ```
-7. Pour supprimer les conteneurs précédemment créés :
+Cette adresse vous permettra d'accéder à la documentation Swagger de l'API et de tester ses différentes fonctionnalités.
+
+#####7. Pour supprimer les conteneurs précédemment créés :
 
 ```bash
 docker-compose down
