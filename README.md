@@ -1,17 +1,23 @@
-# Crypto Price Prediction API
+# BinBot
 
-Ce projet est une API pour la prédiction du prix de clôture des crypto-monnaies, en particulier le Bitcoin (BTC), en utilisant un modèle RandomForestRegressor pré-entraîné. L'API est construite avec FastAPI et utilise une base de données MySQL pour stocker les données historiques des prix. 
+BinBot est un projet qui récupère les données de streaming et historiques via l'API de Binance et Websocket. Il les charge dans une base de données montée sur MySQL. Pour ce faire, deux scripts get_historical_klines et get_stream_klines sont utilisés. Il y a deux tables dans la base de données : une table pour les données historiques et une table pour les données de streaming.
+
+La base de données alimente une API montée avec FastAPI qui a un endpoint predict qui fait la prédiction sur la prochaine heure en se basant sur un modèle de machine learning Random Forest Regressor. Ensuite, il récupère le prix de streaming et renvoie un dictionnaire où il y a une décision d'achat ou de vente.
 
 ## Fonctionnalités
 
-L'API offre les fonctionnalités suivantes :
-
-1. Prédiction du prix de clôture pour la prochaine heure.
-2. Consultation de l'historique des prix pour une période et une fréquence données.
-3. Ajout d'un nouvel utilisateur (authentification requise).
-4. Calcul et affichage des métriques de performance du modèle.
+Récupération de données de streaming et historiques via l'API de Binance et Websocket.
+Chargement des données dans une base de données MySQL.
+Prédiction du prix de clôture pour la prochaine heure en utilisant un modèle Random Forest Regressor.
+Endpoint API pour la prédiction et la décision d'achat ou de vente
 
 ## Installation et configuration
+
+Avant d'installer BinBot, assurez-vous que les prérequis suivants sont installés :
+
+Python 3.7 ou version ultérieure
+Docker
+Docker Compose
 
 ### Prérequis
 
@@ -20,12 +26,42 @@ L'API offre les fonctionnalités suivantes :
 
 ### Étapes d'installation
 
-1. Clonez le dépôt GitHub :
+1. Assurez-vous que votre système est à jour en exécutant les commandes suivantes :
 
 ```bash
-git clone https://github.com/votre_nom_utilisateur/crypto-price-prediction.git
+sudo apt update && sudo apt upgrade
+sudo apt install python3-pip
 
-Accédez au répertoire du projet et créez un environnement virtuel :
+2. Vérifiez et installez Git :
 
-cd crypto-price-prediction
-python -m venv venv
+```bash
+git --version
+sudo apt install git
+
+3. Clonez le dépôt Git :
+
+```bash
+git clone https://github.com/HNJbinance/BinBot.git
+cd BinBot
+
+4. Construisez l'image Docker de votre application :
+
+```bash
+gdocker-compose build
+
+5. Démarrez les conteneurs de votre application :
+
+```bash
+docker-compose up
+
+6. Accédez à l'API via votre navigateur en allant à l'adresse suivante :
+
+```bash
+http://localhost:8000/docs
+
+7. Pour supprimer les conteneurs précédemment créés :
+
+```bash
+docker-compose down
+
+
