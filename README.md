@@ -26,7 +26,7 @@ Docker Compose
 
 ### Étapes d'installation
 
-#####1. Assurez-vous que votre système est à jour en exécutant les commandes suivantes :
+1. Assurez-vous que votre système est à jour en exécutant les commandes suivantes :
 
 ```bash
 sudo apt update && sudo apt upgrade
