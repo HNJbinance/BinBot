@@ -15,7 +15,7 @@ def main():
             for path in process.cmdline():
                 if myname in path:
                     print("process found")
-                    process.terminate() 
+                    # process.terminate() 
 
     # info maximum limit request API : 1,200 request weight per minute
     # if rule break : http 403 with ban period of 5 min
@@ -35,12 +35,11 @@ def main():
     db_symbol = 'BTCUSDT'
     db_interval = '1h'
 
-    api_endtime = max_open_time
     print('get_historical_date : db_symbol:{}, db_interval:{}'.format(db_symbol,db_interval))
 
     while (api_starttime < api_endtime and i < max_loop ) : 
         # get historical data of symbol/interval requested from binance REST API
-        klines_data =  client.klines(symbol=db_symbol, interval=db_interval,startTime=api_endtime-1,limit=1000)
+        klines_data =  client.klines(symbol=db_symbol, interval=db_interval,startTime=max_open_time,limit=1000)
         # Remove last index of each list (// Unused field. Ignore.)
         klines_data = [klines_data[:-1] for klines_data in klines_data]
 
@@ -55,7 +54,7 @@ def main():
             # Storing API result into database
             print(klines_data)
             sql.store_historical_klines(db_symbol,db_interval,klines_data)
-
+            max_open_time = api_endtime 
             i += 1
     else :        
         if max_open_time > api_starttime : 
