@@ -31,37 +31,37 @@ Docker Compose
 ```bash
 sudo apt update && sudo apt upgrade
 sudo apt install python3-pip
-
+```
 2. Vérifiez et installez Git :
 
 ```bash
 git --version
 sudo apt install git
-
+```
 3. Clonez le dépôt Git :
 
 ```bash
 git clone https://github.com/HNJbinance/BinBot.git
 cd BinBot
-
+```
 4. Construisez l'image Docker de votre application :
 
 ```bash
 gdocker-compose build
-
+```
 5. Démarrez les conteneurs de votre application :
 
 ```bash
 docker-compose up
-
+```
 6. Accédez à l'API via votre navigateur en allant à l'adresse suivante :
 
 ```bash
 http://localhost:8000/docs
-
+```
 7. Pour supprimer les conteneurs précédemment créés :
 
 ```bash
 docker-compose down
-
+```
 
