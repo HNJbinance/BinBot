@@ -47,7 +47,7 @@ cd BinBot
 #####4. Construisez l'image Docker de votre application :
 
 ```bash
-gdocker-compose build
+docker-compose build
 ```
 #####5. Démarrez les conteneurs de votre application :
 
@@ -59,7 +59,7 @@ docker-compose up
 ```bash
 http://localhost:8000/docs
 ```
-Cette adresse vous permettra d'accéder à la documentation Swagger de l'API et de tester ses différentes fonctionnalités.
+#####Cette adresse vous permettra d'accéder à la documentation Swagger de l'API et de tester ses différentes fonctionnalités.
 
 #####7. Pour supprimer les conteneurs précédemment créés :
 
