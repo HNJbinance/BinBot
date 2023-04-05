@@ -76,7 +76,7 @@ class SqlAction:
         
     def retrieve_historical_klines(self) :
         try : 
-            query = "select *  from opa.historical_klines order by open_time asc limit 90"
+            query = "select *  from opa.historical_klines order by open_time asc limit 90000"
             self.curr.execute(query)
             data = self.curr.fetchall()
             # print(data)
@@ -99,7 +99,7 @@ class SqlAction:
 
     def retrieve_historical_klines_dataframe(self) :
         try : 
-            query = "select *  from opa.historical_klines order by open_time asc limit 90"
+            query = "select *  from opa.historical_klines order by open_time asc limit 90000"
             self.curr.execute(query)
             data_raw = self.curr.fetchall()
             # print(data)
@@ -110,7 +110,7 @@ class SqlAction:
                         'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume', 
                         'taker_buy_quote_asset_volume']
             #define number time we will add the lags columns to features
-            lag_count = 12
+            lag_count = 2
             #adding data
             for col in lag_columns:
                 for lag in range(1, lag_count + 1):

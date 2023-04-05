@@ -35,10 +35,10 @@ print(X_test.shape, y_test.shape)
 ################################################################################################################
 ########################################### Recherche des hyperparamètres  #####################################
 param_grid = {
-    'n_estimators': [10, 50, 100],
-    'max_depth': [None, 10, 20],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4]
+    'n_estimators': [100],
+    'max_depth': [None],
+    'min_samples_split': [2],
+    'min_samples_leaf': [2]
 }
 
 # param_grid = {
