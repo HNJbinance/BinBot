@@ -69,3 +69,19 @@ http://localhost:8000/docs
 docker-compose down
 ```
 
+### Versions :
+
+Version 1.0.0 : fonctionnalités de base comprenant la récupération des données de streaming et historiques via l'API de Binance et Websocket, l'entraînement d'un modèle Random Forest Regressor pour la prédiction du prix de clôture, et la création d'une API avec FastAPI pour la prédiction et la décision d'achat ou de vente.
+
+Version 1.1.0 (à venir) : ajout de fonctionnalités supplémentaires telles que la consultation de l'historique des prix pour une période et une fréquence données, l'ajout d'un nouvel utilisateur avec authentification requise, et le calcul et l'affichage des métriques de performance du modèle.
+
+Version 1.2.0 (à venir) : création d'un dashboard avec Streamlit pour visualiser les données de streaming en temps réel et l'état des prédictions.
+
+Version 1.3.0 (à venir) : possibilité de lier le bot avec un compte Binance pour permettre des transactions en direct.
+
+### Auteurs :
+
+Hamza Ennaji
+Ilham Noumir
+Loic Montagnac
+Souhila Lebib
