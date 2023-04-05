@@ -79,6 +79,8 @@ Version 1.2.0 (à venir) : création d'un dashboard avec Streamlit pour visualis
 
 Version 1.3.0 (à venir) : possibilité de lier le bot avec un compte Binance pour permettre des transactions en direct.
 
+![Schéma de l'architecture de BinBot](https://raw.githubusercontent.com/HNJbinance/BinBot/main/schema_binbot.png)
+
 ### Auteurs :
 
 Hamza Ennaji
