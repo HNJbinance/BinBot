@@ -8,6 +8,10 @@ Le projet est accompagné d'un guide d'installation détaillé pour faciliter la
 
 Nous espérons que BinBot sera utile pour ceux qui s'intéressent à la prédiction des prix de crypto-monnaies et nous sommes ouverts à tout feedback ou contribution à ce projet.
 
+## Schéma de l'architecture de BinBot
+
+![Schéma de l'architecture de BinBot](https://raw.githubusercontent.com/HNJbinance/BinBot/main/schema_binbot.png)
+
 ## Fonctionnalités
 
 Récupération de données de streaming et historiques via l'API de Binance et Websocket.
@@ -79,7 +83,7 @@ Version 1.2.0 (à venir) : création d'un dashboard avec Streamlit pour visualis
 
 Version 1.3.0 (à venir) : possibilité de lier le bot avec un compte Binance pour permettre des transactions en direct.
 
-![Schéma de l'architecture de BinBot](https://raw.githubusercontent.com/HNJbinance/BinBot/main/schema_binbot.png)
+
 
 ### Auteurs :
 
