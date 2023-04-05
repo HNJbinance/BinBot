@@ -1,8 +1,12 @@
 # BinBot
 
-BinBot est un projet qui récupère les données de streaming et historiques via l'API de Binance et Websocket. Il les charge dans une base de données montée sur MySQL. Pour ce faire, deux scripts get_historical_klines et get_stream_klines sont utilisés. Il y a deux tables dans la base de données : une table pour les données historiques et une table pour les données de streaming.
+BinBot est un projet open-source qui vise à prédire le prix de clôture des crypto-monnaies, en particulier le Bitcoin (BTC), en utilisant des données de streaming et historiques provenant de l'API de Binance et Websocket. Les données sont stockées dans une base de données MySQL et alimentent une API montée avec FastAPI. Le modèle de machine learning utilisé est un Random Forest Regressor et est entrainé par la méthode des hyperparamètres. L'API offre plusieurs fonctionnalités, y compris la prédiction du prix de clôture pour la prochaine heure et compare avec le prix stream pour renvoyer une décision d'achat ou de vente selon votre position.
 
-La base de données alimente une API montée avec FastAPI qui a un endpoint predict qui fait la prédiction sur la prochaine heure en se basant sur un modèle de machine learning Random Forest Regressor. Ensuite, il récupère le prix de streaming et renvoie un dictionnaire où il y a une décision d'achat ou de vente.
+BinBot utilise une architecture basée sur des conteneurs (containers) pour faciliter le déploiement et la gestion du projet. Les conteneurs sont gérés par Docker Compose et incluent un container pour l'initialisation de la base de données et la définition des schémas, un container pour la base de données MySQL, un container pour la population de la base de données et les scripts, et un container pour l'API. Un volume contenant un fichier sql_properties.py est partagé entre les conteneurs.
+
+Le projet est accompagné d'un guide d'installation détaillé pour faciliter la mise en place de l'application. Les utilisateurs peuvent également configurer des tâches CRON pour l'exécution automatique des scripts get_historical_klines et get_stream_klines.
+
+Nous espérons que BinBot sera utile pour ceux qui s'intéressent à la prédiction des prix de crypto-monnaies et nous sommes ouverts à tout feedback ou contribution à ce projet.
 
 ## Fonctionnalités
 
