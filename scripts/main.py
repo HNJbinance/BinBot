@@ -16,11 +16,7 @@ sql = sql.SqlAction()
 #                                          data
 #############################################################################################
 
-close_price_stream = sql.retrieve_stream_price_and_next_hour()[0]["close_price"]
-next_hour = sql.retrieve_stream_price_and_next_hour()[0]["next_hour"]
-feats, _ = sql.retrieve_historical_klines_dataframe()
-next_hour_data = feats.iloc[-1:]
-model = pickle.load(open("../models/model_opt_rfc.pkl", "rb"))
+
 
 #############################################################################################
 #                                          functions
@@ -52,9 +48,11 @@ def predict_close_price():
         - predicted_close_price (float): Le prix de clôture prédit pour la prochaine heure, arrondi à 2 décimales.
         - decision (str): La décision recommandée basée sur la prédiction ("buy", "sell" ou "hold").
     """
-    global next_hour
-    global feats
-    global close_price_stream
+    close_price_stream = sql.retrieve_stream_price_and_next_hour()[0]["close_price"]
+    next_hour = sql.retrieve_stream_price_and_next_hour()[0]["next_hour"]
+    feats, _ = sql.retrieve_historical_klines_dataframe()
+    next_hour_data = feats.iloc[-1:]
+    model = pickle.load(open("../models/model_opt_rfc.pkl", "rb"))
 
     # Predict the close price for the next hour
     next_hour_data = feats.iloc[-1:]
