@@ -78,7 +78,8 @@ class SqlAction:
         try : 
             query = "select *  from opa.historical_klines order by open_time asc limit 90000"
             self.curr.execute(query)
-            data = self.curr.fetchall()
+            data = self.curr.fetchall()        
+            self.conn.commit()
             # print(data)
             return data
         except :
@@ -90,7 +91,8 @@ class SqlAction:
         try : 
             query = "select ifnull(max(open_time),0) open_time  from opa.historical_klines "
             self.curr.execute(query)
-            data = self.curr.fetchall()
+            data = self.curr.fetchall()        
+            self.conn.commit()
             # print(data)
             return data
         except :
@@ -101,7 +103,8 @@ class SqlAction:
         try : 
             query = "select *  from opa.historical_klines order by open_time asc limit 90000"
             self.curr.execute(query)
-            data_raw = self.curr.fetchall()
+            data_raw = self.curr.fetchall()        
+            self.conn.commit()
             # print(data)
             data = pd.DataFrame()
             data = data.append(data_raw, ignore_index=True)
@@ -179,7 +182,8 @@ class SqlAction:
                 substring( event_time, 1 , char_length( event_time) - 3) \
                 ) ,interval 1 hour) , "%Y-%m-%d %H:00:00") next_hour from opa.stream_klines'
             self.curr.execute(query)
-            data = self.curr.fetchall()
+            data = self.curr.fetchall()            
+            self.conn.commit()
             print(data)
             return data
         except :
