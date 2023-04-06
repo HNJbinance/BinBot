@@ -87,7 +87,9 @@ Version 1.3.0 (à venir) : possibilité de lier le bot avec un compte Binance po
 
 ### Auteurs :
 
-Hamza Ennaji
-Ilham Noumir
-Loic Montagnac
-Souhila Lebib
+
+Ilham .N
+Souhila .L
+Loic .M
+Hamza .E
+
