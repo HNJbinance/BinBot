@@ -1,13 +1,15 @@
 # Use the official Python image as the base image  
 FROM python:latest 
 
+WORKDIR /trainapi
+COPY ./models/model_opt_rfc.pkl ./models/model_opt_rfc.pkl
 
 # definition du  working directory to /scripts ou y'aura tous les fichiers dans le conteneur docker
 WORKDIR /scripts
   
 # Copier tous les fichiers de la machine locale vers le working directory ou on travail celui du conteneur  
 COPY ./scripts .  
-  
+# COPY ./models/model_opt_rfc.pkl ./models
 # Install the requirements  
 RUN  pip install -r requirement.txt --no-cache-dir
 #mise à jour du  gestionnaire de paquets APT et installation du Cron

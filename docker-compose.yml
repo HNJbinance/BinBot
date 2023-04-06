@@ -32,6 +32,8 @@ services:
       start_period: 20s 
     ports:
      - "9000:9000" 
+    volumes:
+      - models:/trainapi/models
     environment:  
       DB_HOST: db
       DB_PORT: 3306  
@@ -49,6 +51,9 @@ services:
        condition: service_healthy    
     ports:
      - "8000:8000" 
+    volumes:  
+      - models:/trainapi/models
+
     healthcheck:  
       test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/docs"]  
       interval: 20s  
@@ -60,3 +65,5 @@ services:
       DB_PORT: 3306
       MYSQL_DATABASE: opa
       MYSQL_PASSWORD: temp123
+volumes:
+  models:

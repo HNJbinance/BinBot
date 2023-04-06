@@ -5,8 +5,7 @@ WORKDIR /trainapi
 # Copier les fichiers de code source dans le conteneur  
 COPY ./scripts ./scripts 
 COPY ./models ./models 
-COPY ./requirements.txt . 
-
+COPY ./requirements.txt .
 RUN pip install uvicorn
 
 ENV PATH="/root/.local/bin:${PATH}"  
@@ -18,7 +17,7 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 #pour garder/persister le model .pkl au cas ou le container s'arrête.
-#VOLUME /modelData  
+# VOLUME ./models
 
 WORKDIR /trainapi/scripts
 # Exécuter le script Python  
