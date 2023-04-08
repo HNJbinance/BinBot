@@ -68,7 +68,7 @@ def predict_close_price(username: str = Depends(get_current_username)):
     next_hour = sql.retrieve_stream_price_and_next_hour()[0]["next_hour"]
     feats, _ = sql.retrieve_historical_klines_dataframe()
     next_hour_data = feats.iloc[-1:]
-    model = pickle.load(open("../models/model_opt_rfc.pkl", "rb"))
+    model = pickle.load(open("/mnt/models/model_opt_rfc.pkl", "rb"))
 
     # Predict the close price for the next hour
     next_hour_data = feats.iloc[-1:]

@@ -64,7 +64,7 @@ print("Best model score: ",  grid_search.best_score_)
 ################################################################################################################
 ################################## Métriques et enregistrement du modèle  ######################################
 
-pickle.dump(best_model,open('../models/model_opt_rfc.pkl','wb'))
+pickle.dump(best_model,open('/mnt/models/model_opt_rfc.pkl','wb'))
 
 train_preds = best_model.predict(X_train)
 test_preds = best_model.predict(X_test)
