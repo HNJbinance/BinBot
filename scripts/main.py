@@ -3,7 +3,8 @@ import modules.sql_properties as sql
 import pandas as pd
 import numpy as np
 from fastapi import FastAPI
-
+from fastapi import Depends,  HTTPException, status
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from datetime import datetime
 
 #############################################################################################
@@ -11,12 +12,14 @@ from datetime import datetime
 #############################################################################################
 app = FastAPI()
 sql = sql.SqlAction()
-
-#############################################################################################
-#                                          data
-#############################################################################################
-
-
+security = HTTPBasic()
+users = {
+    "inoumir": "temp123", 
+    "hennaji": "temp123",
+    "lmontagnac": "temp123",
+    "slebib" : "temp123",
+    "scariou" : "temp123"
+}
 
 #############################################################################################
 #                                          functions
@@ -29,12 +32,23 @@ def decision(actual_close_price: float, predict_close_price: float):
         return "buy"
     else:
         return "hold"
+    
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    for key, value in users.items():
+        if credentials.username==key and credentials.password==value:
+            return credentials.username
+
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
 #############################################################################################
 #                                          endpoint
 #############################################################################################
 
 @app.get("/predict")
-def predict_close_price():
+def predict_close_price(username: str = Depends(get_current_username)):
     """
     Prédit le prix de clôture pour la prochaine heure en utilisant le modèle entraîné RandomForestRegressor.
 
