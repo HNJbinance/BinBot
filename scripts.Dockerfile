@@ -2,7 +2,7 @@
 FROM python:latest 
 
 WORKDIR /trainapi
-COPY ./models/model_opt_rfc.pkl ./models/model_opt_rfc.pkl
+# COPY ./models/model_opt_rfc.pkl ./models/model_opt_rfc.pkl
 
 # definition du  working directory to /scripts ou y'aura tous les fichiers dans le conteneur docker
 WORKDIR /scripts
