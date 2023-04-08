@@ -13,13 +13,6 @@ from datetime import datetime
 app = FastAPI()
 sql = sql.SqlAction()
 security = HTTPBasic()
-users = {
-    "inoumir": "temp123", 
-    "hennaji": "temp123",
-    "lmontagnac": "temp123",
-    "slebib" : "temp123",
-    "scariou" : "temp123"
-}
 
 #############################################################################################
 #                                          functions
@@ -34,8 +27,17 @@ def decision(actual_close_price: float, predict_close_price: float):
         return "hold"
     
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    
+    users = {
+        "inoumir": "temp123", 
+        "hennaji": "temp123",
+        "lmontagnac": "temp123",
+        "slebib" : "temp123",
+        "scariou" : "temp123"
+    }
     for key, value in users.items():
         if credentials.username==key and credentials.password==value:
+
             return credentials.username
 
         raise HTTPException(
